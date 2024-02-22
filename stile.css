@@ -1,0 +1,40 @@
+/* styles.css */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 12px;
+  width: 100% /* specifica qui la percentuale di larghezza della colonna */;
+}
+
+.orario-fisso {
+  background-color: #ffcccb; /* Rosso chiaro per l'orario fisso */
+}
+
+.spazioprenotato {
+  background-color: #c1d7ae; /* Verde chiaro per le prenotazioni */
+  color: #ffffff; /* Testo bianco per contrasto */
+}
+
+h2 {
+  color: #333333; /* Colore del titolo */
+}
+
+th {
+  background-color: #4285f4; /* Colore di sfondo per l'intestazione della tabella */
+  color: #ffffff; /* Testo bianco per contrasto */
+}
+
+td {
+  background-color: #ffffff; /* Sfondo bianco per le celle della tabella */
+}
+
+/* Aggiungi ombra per uno stile moderno */
+td, th {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
