@@ -87,7 +87,10 @@ h2 a {
 	  background-color: #1F2739;
 }
 
-.container td:first-child { color: #FB667A; }
+.container td:first-child {
+  color: #FB667A;
+  width: auto; /* Imposta la larghezza in base al contenuto del testo */
+}
 
 .container tr:hover {
    background-color: #464A52;
@@ -109,7 +112,7 @@ h2 a {
 .spazioprenotato {
   background-color: #FFF842;
   color: #403E10;
-  font-weight: bold;
+  font-weight: bolder;
 }
 
 
