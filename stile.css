@@ -67,6 +67,7 @@ h2 a {
 
 .container td:first-child {
   color: #FB667A;
+  font-weight: normal;
 }
 
 .container tr:hover {
@@ -83,5 +84,5 @@ h2 a {
 .spazioprenotato {
   background-color: #FFF842;
   color: #403E10;
-  font-weight: bolder;
+  font-weight: bold;
 }
