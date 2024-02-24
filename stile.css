@@ -89,7 +89,7 @@ h2 a {
 
 .container td:first-child {
   color: #FB667A;
-  width: 30px; /* Imposta la larghezza in base al contenuto del testo */
+  width: auto; /* Imposta la larghezza in base al contenuto del testo */
 }
 
 .container tr:hover {
@@ -113,10 +113,4 @@ h2 a {
   background-color: #FFF842;
   color: #403E10;
   font-weight: bolder;
-}
-
-
-@media (max-width: 800px) {
-.container td:nth-child(4),
-.container th:nth-child(4) { display: none; }
 }
