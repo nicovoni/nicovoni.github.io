@@ -37,6 +37,7 @@ h2 a {
   width: 80%;
   margin: 0 auto;
   display: table;
+  table-layout: fixed; /* Distribuisce uniformemente la larghezza delle colonne */
 }
 
 .container th h1 {
@@ -66,7 +67,6 @@ h2 a {
 
 .container td:first-child {
   color: #FB667A;
-  width: auto;
 }
 
 .container tr:hover {
