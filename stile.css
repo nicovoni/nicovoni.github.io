@@ -107,7 +107,8 @@ h2 a {
 
 
 .spazioprenotato {
-  background-color: #6a7ba1; /* Verde chiaro per le prenotazioni */
+  background-color: #FFF842;
+  color: #403E10;
   font-weight: bold;
 }
 
