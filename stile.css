@@ -99,15 +99,18 @@ h2 a {
 .container td:hover {
   background-color: #FFF842;
   color: #403E10;
-  font-weight: bold;
-  
-
-  
   transition-delay: 0s;
 	  transition-duration: 0.4s;
 	  transition-property: all;
   transition-timing-function: line;
 }
+
+
+.spazioprenotato {
+  background-color: #6a7ba1; /* Verde chiaro per le prenotazioni */
+  font-weight: bold;
+}
+
 
 @media (max-width: 800px) {
 .container td:nth-child(4),
