@@ -89,7 +89,7 @@ h2 a {
 
 .container td:first-child {
   color: #FB667A;
-  width: auto; /* Imposta la larghezza in base al contenuto del testo */
+  width: fit-content; /* Imposta la larghezza in base al contenuto del testo */
 }
 
 .container tr:hover {
