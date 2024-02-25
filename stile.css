@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-  font-size: 3em;
+  font-size: 2em;
   font-weight: bold;
   line-height: 1em;
   text-align: center;
@@ -43,14 +43,14 @@ h2 a {
 .container td {
   font-weight: normal;
   font-size: 1em;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .container th {
   background-color: #1F2739;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .container tr:nth-child(odd) {
