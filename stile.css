@@ -43,18 +43,20 @@ h2 a {
 .container th h1 {
   font-weight: bold;
   font-size: 1em;
-  text-align: left;
   color: #185875;
 }
 
 .container td {
   font-weight: normal;
   font-size: 1em;
-  box-shadow: 0 2px 2px -2px #0E1119;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .container th {
   background-color: #1F2739;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .container tr:nth-child(odd) {
@@ -67,22 +69,19 @@ h2 a {
 
 .container td:first-child {
   color: #FB667A;
-  font-weight: normal;
 }
 
 .container tr:hover {
   background-color: #464A52;
-  box-shadow: 0 6px 6px -6px #0E1119;
 }
 
 .container td:hover {
   background-color: #FFF842;
   color: #403E10;
-  transition: background-color 0.4s, color 0.4s;
+  transition: background-color 0.8s, color 0.8s;
 }
 
 .spazioprenotato {
   background-color: #FFF842;
   color: #403E10;
-  font-weight: bold;
 }
