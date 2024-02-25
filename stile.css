@@ -10,10 +10,10 @@ body {
 
 h1 {
   font-size: 3em;
-  font-weight: 300;
+  font-weight: bold;
   line-height: 1em;
   text-align: center;
-  color: #4DC3FA;
+  color: #FB667A;
 }
 
 h2 {
@@ -34,16 +34,10 @@ h2 a {
 .container {
   text-align: center;
   overflow: hidden;
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
   display: table;
   table-layout: fixed; /* Distribuisce uniformemente la larghezza delle colonne */
-}
-
-.container th h1 {
-  font-weight: bold;
-  font-size: 1em;
-  color: #185875;
 }
 
 .container td {
@@ -78,7 +72,7 @@ h2 a {
 .container td:hover {
   background-color: #FFF842;
   color: #403E10;
-  transition: background-color 0.8s, color 0.8s;
+  transition: background-color 0.9s, color 0.9s;
 }
 
 .spazioprenotato {
