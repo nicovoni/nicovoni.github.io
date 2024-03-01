@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Autenticazione</title>
+  <link rel="stylesheet" type="text/css" href="stile.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="script.js"></script>
+</head>
+<body>
+
+  <div id="loginContainer">
+    <h1>Autenticazione</h1>
+    <label for="password">Inserisci la password:</label>
+    <input type="password" id="password" name="password">
+    <button onclick="verificaPassword()">Accedi</button>
+    <div id="message"></div>
+  </div>
+
+  <div id="selezioneOrarioContainer" style="display:none;">
+    <h1>Selezione Orario</h1>
+    <label for="giorno">Seleziona il giorno:</label>
+    <input type="date" id="giorno" name="giorno">
+    <label for="ora">Seleziona l'ora:</label>
+    <select id="ora" name="ora">
+      <option value="1">1ª ora</option>
+      <option value="2">2ª ora</option>
+      <option value="3">3ª ora</option>
+      <option value="4">4ª ora</option>
+      <option value="5">5ª ora</option>
+      <option value="6">6ª ora</option>
+    </select>
+    <button onclick="confermaSelezione()">Conferma Selezione</button>
+  </div>
+
+  <div id="confermaLampeggioContainer" style="display:none;">
+    <h1>Conferma Lampeggio</h1>
+    <p>Conferma di voler far lampeggiare la cella selezionata?</p>
+    <button onclick="attivaLampeggio()">Sì, Lampeggia!</button>
+  </div>
+
+</body>
+</html>
