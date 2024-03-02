@@ -79,3 +79,16 @@ h2 a {
   background-color: #FFF842;
   color: #403E10;
 }
+
+  .classe-lampeggiante {
+    animation: lampeggio 1s infinite alternate;
+  }
+
+  @keyframes lampeggio {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
