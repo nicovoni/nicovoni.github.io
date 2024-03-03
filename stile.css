@@ -69,22 +69,16 @@ h2 a {
   background-color: #464A52;
 }
 
-.container td:hover {
-  background-color: #FFF842;
-  color: #403E10;
-  transition: background-color 0.9s, color 0.9s;
-}
-
 .spazioprenotato {
   background-color: #FFF842;
   color: #403E10;
 }
 
-  .classe-lampeggiante {
+.classe-lampeggiante {
     animation: lampeggio 1s infinite alternate;
   }
 
-  @keyframes lampeggio {
+@keyframes lampeggio {
     from {
       opacity: 1;
     }
