@@ -70,13 +70,13 @@ h2 a {
 }
 
 .spazioprenotato {
-  background-color: #FFF842;
+  background-color: #4F586E;
   color: #403E10;
 }
 
 .classe-lampeggiante {
-    animation: lampeggio 1s infinite alternate;
-  }
+  animation: lampeggio 1s infinite alternate;
+}
 
 @keyframes lampeggio {
     from {
@@ -85,4 +85,4 @@ h2 a {
     to {
       opacity: 0;
     }
-  }
+}
