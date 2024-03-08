@@ -41,7 +41,7 @@ h2 a {
 }
 
 .container td {
-  font-weight: normal;
+  /* font-weight: normal; */
   font-size: 1em;
   padding-top: 15px;
   padding-bottom: 15px;
