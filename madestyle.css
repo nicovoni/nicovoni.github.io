@@ -1,3 +1,10 @@
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+}
+
 .footer-heart{text-align:center;font-family: open sans, sans-serif;}
 
 .footer-heart a{border-bottom: 1px solid #453886;color: #453886;padding-bottom: .25em; text-decoration: none;}
