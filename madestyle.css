@@ -6,10 +6,11 @@ header {
     padding: 1em;
 }
 
-piedipagina {
-  position: fixed;
-  left: 0;
-  bottom: 0;
+.footer { 
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    z-index: 10;
 }
 
 .footer-heart{text-align:center;font-family: open sans, sans-serif;}
