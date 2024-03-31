@@ -8,6 +8,11 @@ body {
   background-color: #1F2739;
 }
 
+a {
+  color: #FB667A;
+  text-decoration: none;
+}
+
 h1 {
   font-size: 2em;
   font-weight: bold;
