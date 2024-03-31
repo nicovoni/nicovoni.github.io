@@ -1,7 +1,7 @@
 header {
     font-family: open sans, sans-serif;
-    background-color: #333;
-    color: #fff;
+    background-color: #AA3939;
+    color: #FFAAAA;
     text-align: center;
     padding: 1em;
 }
@@ -17,8 +17,8 @@ main a {
     margin: 10px;
     padding: 15px 30px;
     text-decoration: none;
-    color: #fff;
-    background-color: #007bff;
+    color: #FFAAAA;
+    background-color: #801515;
     border-radius: 5px;
     font-weight: bold;
 }
