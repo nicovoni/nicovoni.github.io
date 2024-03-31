@@ -26,8 +26,8 @@ main a {
 /* Rimuovi la posizione assoluta dal footer */
 .footer {
     /* position: absolute; */
-    /* bottom: 0; */
-    /* left: 50%; */
+    bottom: 0;
+    left: 50%;
     /* transform: translateX(-50%); */
     max-width: fit-content;
     z-index: 10;
