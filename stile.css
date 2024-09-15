@@ -9,7 +9,7 @@ body {
 }
 
 a {
-  color: #FB667A;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -18,7 +18,7 @@ h1 {
   font-weight: bold;
   line-height: 1em;
   text-align: center;
-  color: #FB667A;
+  color: #000000;
 }
 
 h2 {
@@ -26,13 +26,13 @@ h2 {
   font-weight: 300;
   text-align: center;
   line-height: 1em;
-  color: #FB667A;
+  color: #000000;
 }
 
 h2 a {
   font-weight: 700;
   text-transform: uppercase;
-  color: #FB667A;
+  color: #000000;
   text-decoration: none;
 }
 
