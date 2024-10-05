@@ -38,6 +38,7 @@ h2 a {
 }
 
 .container td {
+  border: 1px solid #ccc;
   padding-top: 15px;
   padding-bottom: 15px;
 }
