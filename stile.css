@@ -83,6 +83,14 @@ h2 a {
   }
 }
 
+footer {
+    text-align: center; /* Allineamento del testo */
+    padding: 10px 0; /* Spaziatura interna */
+    position: relative; /* Posizione */
+    bottom: 0; /* Ancoraggio al fondo */
+    width: 100%; /* Larghezza al 100% */
+}
+
 .spazioprenotato {
   background-color: #A59370;
   /* color: #403E10; */
