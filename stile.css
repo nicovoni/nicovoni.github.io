@@ -43,21 +43,21 @@ h2 a {
 }
 
 .container th {
-  background-color: #000000;
+  background-color: #ffffff;
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
 .container tr:nth-child(odd) {
-  background-color: #323C50;
+  background-color: #ffffff;
 }
 
 .container tr:nth-child(even) {
-  background-color: #2C3446;
+  background-color: #ffffff;
 }
 
 .container td:first-child {
-  color: #ffffff;
+  color: #000000;
 }
 
 .container tr:hover {
