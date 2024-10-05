@@ -61,7 +61,7 @@ h2 a {
 }
 
 .container tr:nth-child(even) {
-  background-color: #ffffff;
+  background-color: #F08080;
 }
 
 .container td:first-child {
@@ -69,7 +69,6 @@ h2 a {
 }
 
 .container tr:hover {
-  background-color: #000000;
 }
 
 @media (max-width: 600px) { /* Per schermi fino a 600px di larghezza */
