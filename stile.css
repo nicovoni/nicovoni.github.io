@@ -2,9 +2,7 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
-  line-height: 1.42em;
-  color: #ffffff;
+  color: #000000;
   background-color: #ffffff;
 }
 
@@ -14,47 +12,36 @@ a {
 }
 
 h1 {
-  font-size: 2em;
-  font-weight: bold;
-  line-height: 1em;
   text-align: center;
   text-transform: uppercase;
   color: #000000;
 }
 
 h2 {
-  font-size: 1em;
-  font-weight: 300;
   text-align: center;
-  line-height: 1em;
   text-transform: uppercase;
   color: #000000;
 }
 
 h2 a {
-  font-weight: 700;
   text-transform: uppercase;
   color: #000000;
 }
 
 .container {
   text-align: center;
-  overflow: hidden;
-  width: 85%;
-  margin: 0 auto;
+  overflow: visible;
   display: table;
   table-layout: fixed; /* Distribuisce uniformemente la larghezza delle colonne */
 }
 
 .container td {
-  /* font-weight: normal; */
-  font-size: 1em;
   padding-top: 15px;
   padding-bottom: 15px;
 }
 
 .container th {
-  background-color: #1F2739;
+  background-color: #000000;
   padding-top: 15px;
   padding-bottom: 15px;
 }
