@@ -97,7 +97,8 @@ footer {
 }
 
 .dada {
-    text-decoration: underline;
+  background-color: #E51872;
+  text-decoration: underline;
 }
 
 @keyframes lampeggio {
