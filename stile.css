@@ -38,7 +38,7 @@ h2 a {
 }
 
 .container {
-  width: 50%;
+  width: 75%;
   margin: 0 auto;
   text-align: center;
   overflow: hidden;
@@ -75,6 +75,12 @@ h2 a {
 
 .container tr:hover {
   background-color: #000000;
+}
+
+@media (max-width: 600px) { /* Per schermi fino a 600px di larghezza */
+  .container {
+    width: 100%; /* Utilizza tutta la larghezza disponibile */
+  }
 }
 
 .spazioprenotato {
