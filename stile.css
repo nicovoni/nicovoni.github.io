@@ -1,17 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
 
 body {
-  background-color: #ffffff;
-  color: #000000;
-  font-family: "Sixtyfour Convergence", sans-serif;
+  font-family: "Afacad Flux", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: <weight>;
   font-style: normal;
   font-variation-settings:
-    "BLED" 0,
-    "SCAN" 0,
-    "XELA" 0,
-    "YELA" 0;
+    "slnt" 0;
 }
 
 a {
