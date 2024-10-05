@@ -46,13 +46,10 @@ h2 a {
   table-layout: fixed; /* Distribuisce uniformemente la larghezza delle colonne */
 }
 
-.container p {
+.container td {
   word-wrap: break-word; /* Permette al testo di andare a capo */
   overflow-wrap: break-word; /* Supporto aggiuntivo per il wrapping del testo */
   margin: 0; /* Evita margini indesiderati */
-}
-
-.container td {
   border: 1px solid #ccc;
   padding-top: 15px;
   padding-bottom: 15px;
