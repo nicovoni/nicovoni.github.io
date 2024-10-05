@@ -96,6 +96,10 @@ footer {
   animation: lampeggio 1s infinite alternate;
 }
 
+.dada {
+    text-decoration: underline;
+}
+
 @keyframes lampeggio {
     from {
       opacity: 1;
