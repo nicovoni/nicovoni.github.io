@@ -57,11 +57,11 @@ h2 a {
 }
 
 .container tr:nth-child(even) {
-  background-color: #F08080; /* Colore di sfondo per righe pari */
+  background-color: #FDEEF4; /* Colore di sfondo per righe pari */
 }
 
 .container tr:nth-child(odd) {
-  background-color: #FFA07A; /* Colore di sfondo per righe dispari */
+  background-color: #FACFE2; /* Colore di sfondo per righe dispari */
 }
 
 .container td:first-child {
