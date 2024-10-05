@@ -11,3 +11,8 @@ body {
     "XELA" 0,
     "YELA" 0;
 }
+
+a {
+  text-decoration: none;
+  text-transform: uppercase;
+}
