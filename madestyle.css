@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
 
 body {
-  background-color: #ffffff;
-  color: #000000;
   font-family: "Sixtyfour Convergence", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -13,52 +11,3 @@ body {
     "XELA" 0,
     "YELA" 0;
 }
-
-header {
-    background-color: #801515;
-    color: #FFE6E6;
-    text-align: center;
-    padding: 1em;
-}
-
-main {
-    text-align: center;
-    padding: 2em;
-}
-
-main a {
-    display: inline-block;
-    margin: 10px;
-    padding: 15px 30px;
-    text-decoration: none;
-    color: #FFE6E6;
-    background-color: #801515;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-/* Rimuovi la posizione assoluta dal footer */
-.footer {
-    /* position: absolute; */
-    /* bottom: 0; */
-    /* left: 50%; */
-    /* transform: translateX(-50%); */
-    /* max-width: fit-content; */
-    z-index: 10;
-    text-align: center;
-    margin-top: 20px auto 0;
-}
-
-.footer-heart{text-align:center;font-family: open sans, sans-serif;}
-
-.footer-heart a{border-bottom: 1px solid #453886;color: #453886;padding-bottom: .25em; text-decoration: none;}
-
-.footer-heart a:hover{color:#2196f3; background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23453886' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
-  background-position: bottom;
-  background-repeat: repeat-x;
-  background-size: 20%;
-  border-bottom: 0;
-  padding-bottom: .3em;
-  text-decoration: none;}
-
-.emoji{vertical-align: middle;}
