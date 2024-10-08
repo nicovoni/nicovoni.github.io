@@ -71,7 +71,7 @@ h2 a {
 .container tr:hover {
 }
 
-  .btn-aggiungi {
+.btn-aggiungi {
     position: absolute;
     bottom: 5px;
     right: 5px;
@@ -84,7 +84,7 @@ h2 a {
     font-size: 12px;
   }
 
-  .btn-aggiungi:hover {
+.btn-aggiungi:hover {
     background-color: #45a049;
   }
 
