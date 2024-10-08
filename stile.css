@@ -76,13 +76,19 @@ h2 a {
     position: absolute;
     bottom: 5px;
     right: 5px;
+    width: 30px; /* Larghezza fissa */
+    height: 30px; /* Altezza fissa */
     background-color: #4CAF50; /* Colore verde per il pulsante */
     color: white;
-    border: none;
+    border: none; /* Rimuovi il bordo */
+    padding: 0; /* Rimuovi il padding */
+    border-radius: 50%; /* Bordo rotondo */
+    font-size: 12px; /* Dimensione del font */
     cursor: pointer;
-    border-radius: 50%;
-    font-size: 12px;
-  }
+    display: flex; /* Per centrare il testo */
+    align-items: center; /* Allinea verticalmente al centro */
+    justify-content: center; /* Allinea orizzontalmente al centro */
+}
 
 .btn-aggiungi:hover {
     background-color: #45a049;
