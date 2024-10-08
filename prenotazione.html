@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazione Laboratorio</title>
+</head>
+<body>
+    <h2>Prenota il Laboratorio</h2>
+
+    <form id="formPrenotazioneLab">
+        <label for="inputNomeUtente">Inserisci il tuo username (senza @isufol.it):</label>
+        <input type="text" id="inputNomeUtente" required>
+        <br><br>
+
+        <label for="selezioneAttrezzatura">Cosa desideri prenotare?</label>
+        <select id="selezioneAttrezzatura" required>
+            <option value="Lab. multimediale">Lab. multimediale</option>
+            <option value="Notebook (30)">Notebook (30)</option>
+            <option value="iPad (25)">iPad (25)</option>
+        </select>
+        <br><br>
+
+        <input type="hidden" id="hiddenOraPrenotazione">
+        <input type="hidden" id="hiddenDataPrenotazione">
+
+        <button type="button" onclick="inviaPrenotazione()">Conferma Prenotazione</button>
+    </form>
+
+    <script>
+        // Recupera i parametri dalla query string e imposta i campi nascosti
+        window.onload = function() {
+            const parametriRichiesta = new URLSearchParams(window.location.search);
+            document.getElementById("hiddenOraPrenotazione").value = parametriRichiesta.get("slotOra");
+            document.getElementById("hiddenDataPrenotazione").value = parametriRichiesta.get("slotData");
+        }
+
+        // Funzione per inviare la prenotazione al backend
+        function inviaPrenotazione() {
+            const nomeUtente = document.getElementById("inputNomeUtente").value;
+            const attrezzaturaSelezionata = document.getElementById("selezioneAttrezzatura").value;
+            const oraSelezionata = document.getElementById("hiddenOraPrenotazione").value;
+            const dataSelezionata = document.getElementById("hiddenDataPrenotazione").value;
+
+            if (nomeUtente && attrezzaturaSelezionata) {
+                const emailUtente = `${nomeUtente}@isufol.it`;
+                google.script.run.controlloprenotazione({
+                    email: emailUtente,
+                    slotOra: oraSelezionata,
+                    slotData: dataSelezionata,
+                    nomelab: attrezzaturaSelezionata
+                });
+                alert("Richiesta di prenotazione inviata.");
+                window.close();  // Chiude la finestra o reindirizza l'utente
+            } else {
+                alert("Compila tutti i campi.");
+            }
+        }
+    </script>
+</body>
+</html>
