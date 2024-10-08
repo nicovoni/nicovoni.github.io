@@ -11,8 +11,13 @@ function btnprenota(button) {
 
     // Mostra il messaggio di conferma
     if (confirm(messaggio)) {
-        // Reindirizza l'utente alla nuova pagina HTML per inserire lo username e scegliere cosa prenotare
-        var url = "prenotazione.html?slotOra=" + encodeURIComponent(slotOra) + "&slotData=" + encodeURIComponent(slotData);
+        // URL del deployment della tua applicazione web (modifica con il tuo URL reale)
+        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbxKq1jVDMP1YiOa47eynJ6Nno-BJY51wYF7kr1W-1p-0yqGXgaMMQ0LTqebvsa9D2c4/exec";
+
+        // Aggiungi i parametri alla URL
+        var url = baseURL + "?slotOra=" + encodeURIComponent(slotOra) + "&slotData=" + encodeURIComponent(slotData);
+        
+        // Reindirizza l'utente alla nuova pagina HTML servita da Apps Script
         window.location.href = url;
     } else {
         alert("Prenotazione annullata.");
