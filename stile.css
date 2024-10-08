@@ -71,6 +71,23 @@ h2 a {
 .container tr:hover {
 }
 
+  .btn-aggiungi {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #4CAF50; /* Colore verde per il pulsante */
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+
+  .btn-aggiungi:hover {
+    background-color: #45a049;
+  }
+
 @media (max-width: 600px) { /* Per schermi fino a 600px di larghezza */
   .container {
     width: 100%; /* Utilizza tutta la larghezza disponibile */
