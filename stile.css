@@ -42,6 +42,7 @@ h2 a {
 }
 
 .container td {
+  position: relative; /* Posizione relativa per le celle */
   word-wrap: break-word; /* Permette al testo di andare a capo */
   overflow-wrap: break-word; /* Supporto aggiuntivo per il wrapping del testo */
   margin: 0; /* Evita margini indesiderati */
