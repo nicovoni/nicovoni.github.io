@@ -12,7 +12,7 @@ function btnprenota(button) {
     // Mostra il messaggio di conferma
     if (confirm(messaggio)) {
         // URL del deployment della tua applicazione web (modifica con il tuo URL reale)
-        var baseURL = "https://script.google.com/macros/s/AKfycbwHzx80GTwSc6FppUFYkbP50MP_QSzQLVldQ1_r1DYVsUTORR-dPq3uLNa5oOOhcFn_/exec";
+        var baseURL = "https://script.google.com/macros/s/AKfycbwPVlAlk3qzQUNqsXxvhC1w8xFmcZdKLAR7xl6QiEl0-L0G5w5oD_C2decKM02gFLE4/exec";
 
         // Aggiungi i parametri alla URL
         var url = baseURL + "?slotOra=" + encodeURIComponent(slotOra) + "&slotData=" + encodeURIComponent(slotData);
