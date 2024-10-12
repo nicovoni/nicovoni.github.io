@@ -7,7 +7,7 @@ function btnprenota(button) {
     var slotData = cella.getAttribute("slotdata");
 
     // Crea il messaggio di conferma
-    var messaggio = "Vuoi prenotare il laboratorio multimediale la " + slotOra + "a ora del " + slotData + "?";
+    var messaggio = "Vuoi prenotare il laboratorio multimediale la " + slotOra + "ª ora del " + slotData + "?";
 
     // Mostra il messaggio di conferma
     if (confirm(messaggio)) {
