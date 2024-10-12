@@ -7,12 +7,12 @@ function btnprenota(button) {
     var slotData = cella.getAttribute("slotdata");
 
     // Crea il messaggio di conferma
-    var messaggio = "Vuoi prenotare il laboratorio multimediale la " + slotOra + "ª ora del " + slotData + "?";
+    var messaggio = "Vuoi prenotare la " + slotOra + "ª ora del " + slotData + "?";
 
     // Mostra il messaggio di conferma
     if (confirm(messaggio)) {
         // URL del deployment della tua applicazione web (modifica con il tuo URL reale)
-        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbxNFMaB_zj8Qb8Xh7Ao6Yel2foIrSpFiQQBs-x2HDp6d5G2YiMKK9INOozIpK8h5rpa/exec";
+        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbxKxA3hmr29pw6EG1E4JooYK35Lb5vhitu4Gy2FgmFDL5K7eENR-n1FzxUk28jLgKEp/exec";
 
         // Aggiungi i parametri alla URL
         var url = baseURL + "?slotOra=" + encodeURIComponent(slotOra) + "&slotData=" + encodeURIComponent(slotData);
