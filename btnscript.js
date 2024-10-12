@@ -12,7 +12,7 @@ function btnprenota(button) {
     // Mostra il messaggio di conferma
     if (confirm(messaggio)) {
         // URL del deployment della tua applicazione web (modifica con il tuo URL reale)
-        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbwOTAYwTo0KnPWh3p8zK1MubHnxBplboWe1XVCZN0ESW8P_9vINXlZWALXh44jHDx-z/exec";
+        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbw_rRAvuRk6yFgDzTQ1qcOVF3RHPOWttO0iDzdue3L3upccEU417M8jVO20KWRuEtBr/exec";
 
         // Aggiungi i parametri alla URL
         var url = baseURL + "?slotOra=" + encodeURIComponent(slotOra) + "&slotData=" + encodeURIComponent(slotData);
