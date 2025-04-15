@@ -5,6 +5,11 @@
      */
     function btnprenota(button) {
         try {
+            // Validazione del pulsante
+            if (!button || !button.parentNode) {
+                throw new Error("Elemento pulsante non valido o mancante.");
+            }
+
             // Ottieni la cella padre del pulsante
             const cella = button.parentNode;
 
@@ -14,20 +19,17 @@
 
             // Validazione degli attributi
             if (!slotOra || !slotData) {
-                alert("Errore: dati mancanti per la prenotazione. Contatta l'amministratore.");
-                return;
+                throw new Error("Dati mancanti per la prenotazione. Verifica che gli attributi 'slotora' e 'slotdata' siano impostati.");
             }
 
             // Crea il messaggio di conferma
-            const messaggio = `Vuoi prenotare la ${slotOra}ª ora del ${slotData}?`;
+            const messaggio = `Vuoi prenotare la ${sanitizeInput(slotOra)}ª ora del ${sanitizeInput(slotData)}?`;
 
             // Mostra il messaggio di conferma
             if (confirm(messaggio)) {
-                // URL del deployment della tua applicazione web
-                const baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbzck4MvG6BcR8F6L5nTQMu57GkbzM4O_wDGC6pK1kj6-Nt2cvrTQJ06vtHDLhcyYA6q/exec";
-
-                // Costruisci l'URL con i parametri
-                const url = `${baseURL}?slotOra=${encodeURIComponent(slotOra)}&slotData=${encodeURIComponent(slotData)}`;
+                // Validazione e costruzione dell'URL
+                const baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycby96Ro9VaKsXBWWMXRCn_A17Muad5v2CuxtYRz5yRExYT-2--yPJaKFgLUmQ4j2OdI/exec";
+                const url = buildSafeURL(baseURL, { slotOra, slotData });
 
                 // Reindirizza l'utente alla nuova pagina servita da Apps Script
                 window.location.href = url;
@@ -36,10 +38,33 @@
                 alert("Prenotazione annullata.");
             }
         } catch (error) {
-            // Log dell'errore per debugging
+            // Log dell'errore per debugging e messaggio all'utente
             console.error("Errore durante la prenotazione:", error);
-            alert("Si è verificato un errore. Riprova più tardi.");
+            alert("Si è verificato un errore durante la prenotazione. Riprova più tardi.");
         }
+    }
+
+    /**
+     * Funzione di utilità per costruire un URL sicuro con parametri.
+     * @param {string} baseURL - L'URL base.
+     * @param {Object} params - Oggetto con i parametri della query string.
+     * @returns {string} - URL completo e sicuro.
+     */
+    function buildSafeURL(baseURL, params) {
+        const url = new URL(baseURL);
+        for (const [key, value] of Object.entries(params)) {
+            url.searchParams.append(key, encodeURIComponent(value));
+        }
+        return url.toString();
+    }
+
+    /**
+     * Funzione di utilità per sanificare input.
+     * @param {string} input - La stringa da sanificare.
+     * @returns {string} - Input sanificato.
+     */
+    function sanitizeInput(input) {
+        return input.replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
     }
 
     // Esporta la funzione globalmente per l'uso nei pulsanti HTML
