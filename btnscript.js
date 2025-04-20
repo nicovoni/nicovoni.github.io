@@ -28,7 +28,7 @@
             // Mostra il messaggio di conferma
             if (confirm(messaggio)) {
                 // Validazione e costruzione dell'URL
-                const baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbwM65pzbLGlCoqZU_m06Anbo0m5KtcRU_BuxOhBvAVA9EhEK-FYTA4eRwBGF59qCbzj/exec";
+                const baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbzuanQY2u9lbpYJY5_TeKcWjekxpjIfHl6p0JxaXAKjn6qtPZ0ICh__yHtVcCbWiAzQ/exec";
                 const url = buildSafeURL(baseURL, { slotOra, slotData });
 
                 // Reindirizza l'utente alla nuova pagina servita da Apps Script
