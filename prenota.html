@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prenotazione Laboratorio Multimediale</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    .btn-primary {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+    .login-container {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center">Prenota il Laboratorio Multimediale</h2>
+
+    <!-- Login manuale: inserimento email -->
+    <div class="login-container">
+      <label for="emailLogin">Inserisci la tua email @isufol.it:</label>
+      <input type="email" id="emailLogin" class="form-control" placeholder="nome.cognome@isufol.it" required>
+      <button id="loginButton" class="btn btn-primary mt-2">Accedi</button>
+    </div>
+
+    <!-- Modulo di prenotazione -->
+    <form id="formPrenotazioneLab" style="display:none;">
+      <div class="form-group">
+        <label for="attrezzatura">Scegli Attrezzatura:</label>
+        <select class="form-control" id="attrezzatura" name="attrezzatura" required>
+          <option value="">-- Seleziona --</option>
+          <option value="Lab. multimediale">Lab. multimediale</option>
+          <option value="Carrello 30 notebook">Carrello 30 notebook</option>
+          <option value="Carrello 25 iPad">Carrello 25 iPad</option>
+        </select>
+      </div>
+
+      <!-- Campi per il Lab. multimediale -->
+      <div id="labFields" style="display:none;">
+        <div class="form-group">
+          <label for="giorno">Data prenotazione:</label>
+          <input type="date" class="form-control" id="giorno" name="giorno" required>
+        </div>
+        <div class="form-group">
+          <label for="ora">Ora prenotazione:</label>
+          <select class="form-control" id="ora" name="ora" required>
+            <option value="1ª ora">1ª ora</option>
+            <option value="2ª ora">2ª ora</option>
+            <option value="3ª ora">3ª ora</option>
+            <option value="4ª ora">4ª ora</option>
+            <option value="5ª ora">5ª ora</option>
+            <option value="6ª ora">6ª ora</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="note">Note:</label>
+          <textarea class="form-control" id="note" name="note" rows="3" required placeholder="Indicare l'argomento della lezione, eventuale richiesta preparazione PC..."></textarea>
+        </div>
+      </div>
+
+      <!-- Campi per i Carrelli -->
+      <div id="carrelloFields" style="display:none;">
+        <div class="form-group">
+          <label for="aula">Aula di destinazione:</label>
+          <select class="form-control" id="aula" name="aula" required>
+            <option value="">-- Seleziona --</option>
+            <option value="Andromeda">Andromeda</option>
+            <option value="Cassiopea">Cassiopea</option>
+            <option value="Lyra">Lyra</option>
+            <option value="Orione">Orione</option>
+            <option value="1A LS">1A LS</option>
+            <option value="2A LS">2A LS</option>
+            <option value="3A LS">3A LS</option>
+            <option value="4A LS">4A LS</option>
+            <option value="5A LS">5A LS</option>
+            <option value="1B LSA">1B LSA</option>
+            <option value="2B LSA">2B LSA</option>
+            <option value="5B LSA">5B LSA</option>
+            <option value="1C LSU">1C LSU</option>
+            <option value="2C LSU">2C LSU</option>
+            <option value="3C LSU">3C LSU</option>
+            <option value="4C LSU">4C LSU</option>
+            <option value="5C LSU">5C LSU</option>
+            <option value="1F LS">1F LS</option>
+            <option value="2F LS">2F LS</option>
+            <option value="5F LS">5F LS</option>
+            <option value="1G LSU">1G LSU</option>
+            <option value="2G LSU">2G LSU</option>
+            <option value="3G LSU">3G LSU</option>
+            <option value="4G LSU">4G LSU</option>
+            <option value="1H LSA">1H LSA</option>
+            <option value="2H LSA">2H LSA</option>
+            <option value="5H LSA">5H LSA</option>
+            <option value="Lab. Fisica">Lab. Fisica</option>
+            <option value="Lab. Chimica">Lab. Chimica</option>
+            <option value="Aula Magna">Aula Magna</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="numDispositivi">Numero dispositivi richiesti:</label>
+          <input type="number" class="form-control" id="numDispositivi" name="numDispositivi" min="1" required>
+        </div>
+        <div class="form-group">
+          <label for="giornoCarrello">Data prenotazione:</label>
+          <input type="date" class="form-control" id="giornoCarrello" name="giornoCarrello" required>
+        </div>
+        <div class="form-group">
+          <label for="oraCarrello">Ora prenotazione:</label>
+          <select class="form-control" id="oraCarrello" name="oraCarrello" required>
+            <option value="1ª ora">1ª ora</option>
+            <option value="2ª ora">2ª ora</option>
+            <option value="3ª ora">3ª ora</option>
+            <option value="4ª ora">4ª ora</option>
+            <option value="5ª ora">5ª ora</option>
+            <option value="6ª ora">6ª ora</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="noteCarrello">Note:</label>
+          <textarea class="form-control" id="noteCarrello" name="noteCarrello" rows="3" required placeholder="Indicare l'argomento della lezione, eventuale richiesta preparazione PC..."></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-3">Prenota</button>
+    </form>
+  </div>
+
+  <script>
+    let userEmail = null;
+
+    document.getElementById('loginButton').addEventListener('click', function() {
+      const emailInput = document.getElementById('emailLogin').value.trim();
+      if (emailInput.endsWith('@isufol.it')) {
+        userEmail = emailInput;
+        document.getElementById('formPrenotazioneLab').style.display = 'block';
+        document.querySelector('.login-container').style.display = 'none';
+      } else {
+        alert('Devi inserire una email valida del dominio @isufol.it.');
+      }
+    });
+
+    document.getElementById('attrezzatura').addEventListener('change', function() {
+      const scelta = this.value;
+      document.getElementById('labFields').style.display = scelta === 'Lab. multimediale' ? 'block' : 'none';
+      document.getElementById('carrelloFields').style.display = (scelta !== '' && scelta !== 'Lab. multimediale') ? 'block' : 'none';
+    });
+
+    document.getElementById('formPrenotazioneLab').addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (!userEmail) {
+        alert("Devi prima effettuare il login.");
+        return;
+      }
+
+      const attrezzatura = document.getElementById('attrezzatura').value;
+      const giorno = (attrezzatura === 'Lab. multimediale') ? document.getElementById('giorno').value : document.getElementById('giornoCarrello').value;
+      const ora = (attrezzatura === 'Lab. multimediale') ? document.getElementById('ora').value : document.getElementById('oraCarrello').value;
+      const note = (attrezzatura === 'Lab. multimediale') ? document.getElementById('note').value : document.getElementById('noteCarrello').value;
+      const aula = (attrezzatura !== 'Lab. multimediale') ? document.getElementById('aula').value : '';
+      const numDispositivi = (attrezzatura !== 'Lab. multimediale') ? document.getElementById('numDispositivi').value : '';
+
+      const dati = {
+        email: userEmail,
+        attrezzatura: attrezzatura,
+        giorno: giorno,
+        ora: ora,
+        note: note,
+        aula: aula,
+        numDispositivi: numDispositivi
+      };
+
+      fetch('https://script.google.com/macros/s/ID_DEL_TUO_APPLICATIVO_WEB/exec', {
+        method: 'POST',
+        body: JSON.stringify(dati),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result === "success") {
+          alert("Prenotazione completata con successo!");
+          location.reload();
+        } else {
+          alert("Errore durante la prenotazione: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Errore:', error);
+        alert("Errore di rete o server.");
+      });
+    });
+  </script>
+</body>
+</html>
