@@ -1,77 +1,139 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="prenota il laboratorio multimediale o informatico e i dispositivi ipad e notebook del liceo di follonica e visualizza l'orario fisso e le prenotazioni dei docenti">
-    <meta name="author" content="Nicola Cantalupo">
-    <title>Prenotazione laboratorio multimediale | Liceo di Follonica</title>
-    <link rel="icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f7f9fc;
-            color: #333;
-            margin: 0;
-            padding: 2rem;
-            line-height: 1.6;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="prenota il laboratorio multimediale o informatico e i dispositivi ipad e notebook del liceo di follonica e visualizza l'orario fisso e le prenotazioni dei docenti" />
+  <meta name="author" content="Nicola Cantalupo" />
+  <title>Prenotazione laboratorio multimediale | Liceo di Follonica</title>
+  <link rel="icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f7f9fc;
+      --text-color: #1a1a1a;
+      --button-bg: #0077ff;
+      --button-hover: #005fd1;
+      --footer-color: #777;
+    }
 
-        h1 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: #1a1a1a;
-        }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --button-bg: #3399ff;
+      --button-hover: #1a73e8;
+      --footer-color: #999;
+    }
 
-        p {
-            max-width: 700px;
-            margin: 0 auto 1.5rem auto;
-            font-size: 1.1rem;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 1.5rem;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
 
-        .buttons {
-            text-align: center;
-            margin: 2rem 0;
-        }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
 
-        .buttons a {
-            text-decoration: none;
-            margin: 0 1rem;
-        }
+    p {
+      max-width: 720px;
+      margin: 0 auto 1.5rem auto;
+      font-size: 1.05rem;
+      text-align: center;
+    }
 
-        button {
-            background: #0077ff;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
 
-        button:hover {
-            background: #005fd1;
-        }
+    @media (min-width: 480px) {
+      .buttons {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
 
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: #777;
-        }
-    </style>
+    .buttons a {
+      text-decoration: none;
+    }
+
+    button {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    button:hover {
+      background: var(--button-hover);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: var(--footer-color);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 2px solid var(--text-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background-color: transparent;
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--text-color);
+      color: var(--bg-color);
+    }
+  </style>
 </head>
 <body>
-    <h1>Prenotazione laboratorio multimediale e dispositivi - Liceo di Follonica</h1>
-    <p>Il Liceo di Follonica dispone di un laboratorio multimediale con postazioni fisse, un carrello mobile con notebook di ultima generazione e un ulteriore carrello mobile con iPad.</p>
-    <div class="buttons">
-        <a href="https://forms.gle/JuLfANsMMFMz1rCt7"><button>Prenota</button></a>
-        <a href="labmulti.html"><button>Disponibilità Lab. multimediale</button></a>
-    </div>
-    <footer>© 2024 Nicola. Tutti i diritti riservati.</footer>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 Modalità scura</button>
+
+  <h1>Prenotazione laboratorio multimediale e dispositivi - Liceo di Follonica</h1>
+  <p>Il Liceo di Follonica dispone di un laboratorio multimediale con postazioni fisse, un carrello mobile con notebook di ultima generazione e un ulteriore carrello mobile con iPad.</p>
+  
+  <div class="buttons">
+    <a href="https://forms.gle/JuLfANsMMFMz1rCt7"><button>Prenota</button></a>
+    <a href="labmulti.html"><button>Disponibilità Lab. multimediale</button></a>
+  </div>
+
+  <footer>© 2024 Nicola. Tutti i diritti riservati.</footer>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      const btn = document.querySelector('.theme-toggle');
+      if (document.body.classList.contains('dark')) {
+        btn.textContent = '☀️ Modalità chiara';
+      } else {
+        btn.textContent = '🌙 Modalità scura';
+      }
+    }
+  </script>
 </body>
 </html>
