@@ -166,15 +166,15 @@ h1, h2 {
     font-size: 0.9rem;
   }
 
-  /* Rende il pulsante "+" visibile e fisso in basso a destra */
+  /* MODIFICA: il pulsante "+" non è più fisso, ma relativo alla cella */
   .btn-aggiungi {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
-    font-size: 22px;
-    z-index: 1000;
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    margin: 4px auto;
   }
 
   h1, h2 {
@@ -233,8 +233,8 @@ footer {
     width: 100%;
   }
 
-  /* Nasconde le intestazioni delle ore (1ª ora, ecc.) in mobile */
-  .container thead {
+  /* MODIFICA: nasconde intestazioni orarie (es. "1ª ora") su mobile */
+  .intestazioni-ore {
     display: none;
   }
 
@@ -255,7 +255,7 @@ footer {
   }
 
   .container td::before {
-    content: attr(data-label); /* Mostra l'etichetta della colonna */
+    content: attr(data-label); /* Mostra l’etichetta della colonna */
     position: absolute;
     left: 1rem;
     top: 0.75rem;
