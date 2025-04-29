@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@400;600&display=swap');
 
 body {
   font-family: "Afacad Flux", sans-serif;
-  font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-  font-variation-settings: "slnt" 0;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: #f7f7f7;
+  color: #222;
   margin: 0;
   padding: 0;
 }
@@ -15,117 +13,125 @@ body {
 a {
   text-decoration: none;
   text-transform: uppercase;
-  color: #333;
+  color: #000;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #e51872; /* Colore moderno per il link al passaggio del mouse */
+  color: #e51872;
 }
 
 h1, h2 {
   text-align: center;
   text-transform: uppercase;
-  color: #333;
-  letter-spacing: 1.5px;
-  margin-bottom: 1.5rem;
+  color: #000;
+  margin-bottom: 1rem;
 }
 
 .container {
   width: 90%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 2rem auto;
   text-align: center;
   overflow: hidden;
   display: table;
   table-layout: fixed;
   border-collapse: collapse;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: white;
 }
 
 .container td, .container th {
   padding: 1rem;
+  border: 1px solid #ccc;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  border: 1px solid #e0e0e0;
 }
 
 .container th {
-  background-color: #f9f9f9;
+  background-color: #fff;
   font-weight: 600;
 }
 
 .container tr:nth-child(even) {
-  background-color: #fdf1f5;
+  background-color: #fdeef4;
 }
 
 .container tr:nth-child(odd) {
-  background-color: #fce4f1;
+  background-color: #facfe2;
 }
 
 .container td:first-child {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 
 .container tr:hover {
-  background-color: #fce4ec;
+  background-color: #fcdde9;
   transition: background-color 0.3s ease;
 }
 
 .btn-aggiungi {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
+  bottom: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
   background-color: #4CAF50;
   color: white;
   border: none;
   padding: 0;
   border-radius: 50%;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-aggiungi:hover {
   background-color: #45a049;
-  transform: scale(1.1); /* Effetto di ingrandimento al passaggio del mouse */
+  transform: scale(1.1);
 }
 
 .btn-aggiungi:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(72, 162, 76, 0.6); /* Focus con bordo luminoso */
 }
 
 @media (max-width: 600px) {
   .container {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .container table {
+    display: table;
+    width: 100%;
+  }
+
+  .btn-aggiungi {
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
   }
 }
 
 footer {
   text-align: center;
   padding: 1rem 0;
-  background-color: #f0f0f0;
   font-size: 0.9rem;
+  background-color: #eee;
   color: #333;
-  position: relative;
-  bottom: 0;
   width: 100%;
 }
 
 .spazioprenotato {
-  background-color: #A59370;
-  color: #1e1e1e;
+  background-color: #a59370;
+  color: #000;
   font-weight: 700;
 }
 
@@ -135,9 +141,9 @@ footer {
 
 .dada {
   background-color: #e51872;
-  color: #ffffff;
+  color: #fff;
   text-decoration: underline;
-  padding: 0.2rem 0.5rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 4px;
 }
 
@@ -146,6 +152,6 @@ footer {
     opacity: 1;
   }
   to {
-    opacity: 0.3;
+    opacity: 0;
   }
 }
