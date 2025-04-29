@@ -1,118 +1,123 @@
-@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@300..800&display=swap');
 
 body {
   font-family: "Afacad Flux", sans-serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 400;
   font-style: normal;
-  font-variation-settings:
-    "slnt" 0;
+  font-variation-settings: "slnt" 0;
+  background-color: #fafafa;
+  color: #1e1e1e;
+  margin: 0;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
   text-transform: uppercase;
-  color: #000000;
+  color: #1e1e1e;
+  transition: color 0.3s ease;
 }
 
-h1 {
+a:hover {
+  color: #e51872;
+}
+
+h1, h2 {
   text-align: center;
   text-transform: uppercase;
-  color: #000000;
-}
-
-h2 {
-  text-align: center;
-  text-transform: uppercase;
-  color: #000000;
-}
-
-h2 a {
-  text-transform: uppercase;
-  color: #000000;
+  color: #1e1e1e;
+  letter-spacing: 1.5px;
+  margin-bottom: 1rem;
 }
 
 .container {
-  width: 75%;
-  margin: 0 auto;
+  width: 90%;
+  max-width: 1000px;
+  margin: 2rem auto;
   text-align: center;
   overflow: hidden;
   display: table;
-  table-layout: fixed; /* Distribuisce uniformemente la larghezza delle colonne */
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
-.container td {
-  position: relative; /* Posizione relativa per le celle */
-  word-wrap: break-word; /* Permette al testo di andare a capo */
-  overflow-wrap: break-word; /* Supporto aggiuntivo per il wrapping del testo */
-  margin: 0; /* Evita margini indesiderati */
-  border: 1px solid #ccc;
-  padding-top: 15px;
-  padding-bottom: 15px;
+.container td, .container th {
+  padding: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  border: 1px solid #e0e0e0;
 }
 
 .container th {
   background-color: #ffffff;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  font-weight: 600;
 }
 
 .container tr:nth-child(even) {
-  background-color: #FDEEF4; /* Colore di sfondo per righe pari */
+  background-color: #fff0f6;
 }
 
 .container tr:nth-child(odd) {
-  background-color: #FACFE2; /* Colore di sfondo per righe dispari */
+  background-color: #ffe5f0;
 }
 
 .container td:first-child {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 .container tr:hover {
+  background-color: #fce4ec;
+  transition: background-color 0.3s ease;
 }
 
 .btn-aggiungi {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 30px; /* Larghezza fissa */
-    height: 30px; /* Altezza fissa */
-    background-color: #4CAF50; /* Colore verde per il pulsante */
-    color: white;
-    border: none; /* Rimuovi il bordo */
-    padding: 0; /* Rimuovi il padding */
-    border-radius: 50%; /* Bordo rotondo */
-    font-size: 12px; /* Dimensione del font */
-    cursor: pointer;
-    display: flex; /* Per centrare il testo */
-    align-items: center; /* Allinea verticalmente al centro */
-    justify-content: center; /* Allinea orizzontalmente al centro */
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  background-color: #e51872;
+  color: white;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
 
 .btn-aggiungi:hover {
-    background-color: #45a049;
-  }
+  background-color: #c31562;
+}
 
-@media (max-width: 600px) { /* Per schermi fino a 600px di larghezza */
+@media (max-width: 600px) {
   .container {
-    width: 100%; /* Utilizza tutta la larghezza disponibile */
+    width: 100%;
+    font-size: 0.9rem;
   }
 }
 
 footer {
-    text-align: center; /* Allineamento del testo */
-    padding: 10px 0; /* Spaziatura interna */
-    position: relative; /* Posizione */
-    bottom: 0; /* Ancoraggio al fondo */
-    width: 100%; /* Larghezza al 100% */
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #eaeaea;
+  font-size: 0.9rem;
+  color: #333;
 }
 
 .spazioprenotato {
-  background-color: #A59370;
-  /* color: #403E10; */
+  background-color: #c2a87d;
+  color: #1e1e1e;
   font-weight: 700;
-  color: #000000;
 }
 
 .classe-lampeggiante {
@@ -120,16 +125,18 @@ footer {
 }
 
 .dada {
-  background-color: #E51872;
-  color: #FFFFFF;
+  background-color: #e51872;
+  color: #ffffff;
   text-decoration: underline;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
 }
 
 @keyframes lampeggio {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.3;
+  }
 }
