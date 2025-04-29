@@ -205,3 +205,57 @@ footer {
   from { opacity: 1; }
   to   { opacity: 0.4; }
 }
+
+/* VERSIONE MOBILE STACKED */
+@media (max-width: 768px) {
+  .container {
+    display: block;
+    overflow-x: visible;
+  }
+
+  .container table,
+  .container thead,
+  .container tbody,
+  .container th,
+  .container td,
+  .container tr {
+    display: block;
+    width: 100%;
+  }
+
+  .container thead {
+    display: none;
+  }
+
+  .container tr {
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    background-color: var(--bg-alt);
+    padding: 0.5rem;
+  }
+
+  .container td {
+    text-align: left;
+    padding-left: 50%;
+    position: relative;
+    border: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .container td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    top: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+    color: var(--text-muted);
+  }
+
+  .container td:first-child {
+    background-color: inherit;
+    font-weight: bold;
+    padding-left: 1rem;
+  }
+}
