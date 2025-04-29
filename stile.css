@@ -234,8 +234,8 @@ footer {
   }
 
   /* MODIFICA: nasconde intestazioni orarie (es. "1ª ora") su mobile */
-  .intestazioni-ore {
-    display: none;
+  tr.intestazioni-ore {
+    display: none !important;
   }
 
   .container tr {
