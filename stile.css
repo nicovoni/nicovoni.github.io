@@ -121,29 +121,30 @@ h1, h2 {
 .container tr:hover {
   background-color: var(--hover-row);
 }
-/* Bottone home con icona */
+/* Pulsante home elegante e sticky */
 .btn-home {
-  background-color: white;
-  color: #007AFF;
+  background-color: #333;  /* Grigio scuro elegante */
+  color: white;            /* Icona bianca */
   text-decoration: none;
   padding: 12px;
   border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);  /* Ombra morbida per un effetto elegante */
   transition: background-color 0.3s ease, color 0.3s ease;
   font-size: 1.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px; /* Circolare e leggermente più grande per mobile */
+  width: 50px;
   height: 50px;
-  position: absolute; /* Posizionato sopra il contenuto */
-  top: 15px;
-  right: 15px;
+  position: fixed;    /* Posizionato fissa sulla pagina */
+  top: 15px;          /* Distanza dal bordo superiore */
+  left: 15px;         /* Distanza dal bordo sinistro */
+  z-index: 1000;      /* Assicurati che sia visibile sopra altri elementi */
 }
 
 .btn-home:hover {
-  background-color: #007AFF;
-  color: white;
+  background-color: #007AFF;  /* Colore blu quando passa il mouse */
+  color: white;                /* Colore dell'icona bianca */
 }
 /* ---------- PULSANTE "+" ---------- */
 .btn-aggiungi {
@@ -184,7 +185,7 @@ h1, h2 {
     height: 45px;  /* Circolare per mantenere le proporzioni */
     font-size: 1.2rem; /* Più piccolo per adattarsi meglio */
     top: 10px;    /* Più distanziato dal bordo superiore */
-    right: 10px;  /* Più distanziato dal bordo destro */
+    left: 10px;    /* Più distanziato dal bordo sinistro */
   }
   
   .container {
