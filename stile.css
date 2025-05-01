@@ -121,7 +121,30 @@ h1, h2 {
 .container tr:hover {
   background-color: var(--hover-row);
 }
+/* Bottone home con icona */
+.btn-home {
+  background-color: white;
+  color: #007AFF;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Circolare e leggermente più grande per mobile */
+  height: 50px;
+  position: absolute; /* Posizionato sopra il contenuto */
+  top: 15px;
+  right: 15px;
+}
 
+.btn-home:hover {
+  background-color: #007AFF;
+  color: white;
+}
 /* ---------- PULSANTE "+" ---------- */
 .btn-aggiungi {
   position: absolute;
@@ -155,7 +178,15 @@ h1, h2 {
   body {
     font-size: 15px;
   }
-
+    
+  .btn-home {
+    width: 45px;   /* Leggermente più piccolo su mobile */
+    height: 45px;  /* Circolare per mantenere le proporzioni */
+    font-size: 1.2rem; /* Più piccolo per adattarsi meglio */
+    top: 10px;    /* Più distanziato dal bordo superiore */
+    right: 10px;  /* Più distanziato dal bordo destro */
+  }
+  
   .container {
     width: 100%;
   }
