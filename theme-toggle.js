@@ -15,22 +15,18 @@
       showToast(`Tema ${isDark ? 'scuro' : 'chiaro'} attivato temporaneamente`);
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.display = 'block';
-      requestAnimationFrame(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-      });
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(-20px)';
-        setTimeout(() => {
-          toast.style.display = 'none';
-        }, 300);
-      }, 2500);
-    }
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500); // Durata visibilità toast
+}
+
 
     (function applySystemTheme() {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
