@@ -343,3 +343,19 @@ body.dark .theme-toggle {
   transition: opacity 0.3s ease, transform 0.3s ease;
   display: none;
 }
+/* ---------- TEMA SCURO ATTIVABILE VIA CLASSE ---------- */
+body.dark {
+  --primary: #81C784;
+  --primary-hover: #66BB6A;
+  --accent: #FF8A80;
+  --text: #f5f5f5;
+  --text-muted: #ccc;
+  --bg: #121212;
+  --bg-alt: #1e1e1e;
+  --hover-row: #2b2b2b;
+  --row-even: #1c1c1c;
+  --row-odd: #232323;
+  --header-bg: #2a2a2a;
+  --header-text: #f5f5f5;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
