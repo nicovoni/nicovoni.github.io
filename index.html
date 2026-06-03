@@ -3,205 +3,355 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="prenota il laboratorio multimediale o informatico e i dispositivi ipad e notebook del liceo di follonica e visualizza l'orario fisso e le prenotazioni dei docenti" />
+  <meta name="description" content="Prenota il laboratorio multimediale o informatico e i dispositivi iPad e notebook del Liceo di Follonica e visualizza l'orario fisso e le prenotazioni dei docenti" />
   <meta name="author" content="Nicola Cantalupo" />
-  <title>Prenotazione laboratorio multimediale | Liceo di Follonica</title>
+  <title>Prenotazioni | Liceo di Follonica</title>
   <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg-color: #f7f9fc;
-      --text-color: #1a1a1a;
-      --button-bg: #0077ff;
-      --button-hover: #005fd1;
-      --footer-color: #777;
+      --primary: #1a56db;
+      --primary-hover: #1446b8;
+      --primary-light: #e8f0fe;
+      --primary-border: #bfdbfe;
+      --text: #111827;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+      --bg: #f3f4f6;
+      --bg-alt: #ffffff;
+      --border: #e5e7eb;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+      --radius: 12px;
+      --radius-sm: 8px;
     }
 
-    body.dark {
-      --bg-color: #121212;
-      --text-color: #f0f0f0;
-      --button-bg: #3399ff;
-      --button-hover: #1a73e8;
-      --footer-color: #999;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 1.5rem;
-      padding-bottom: 6rem;
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-    }
-
-    p {
-      max-width: 720px;
-      margin: 0 auto 1.5rem auto;
-      font-size: 1.05rem;
-      text-align: center;
-    }
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      margin: 2rem 0 4.5rem 0;
-    }
-
-    @media (min-width: 480px) {
-      .buttons {
-        flex-direction: row;
-        justify-content: center;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary: #4f86f7;
+        --primary-hover: #3b6fd4;
+        --primary-light: #1e2d4a;
+        --primary-border: #2d4a7a;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --text-light: #64748b;
+        --bg: #0f172a;
+        --bg-alt: #1e293b;
+        --border: #334155;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow: 0 4px 16px rgba(0,0,0,0.4);
+        --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
       }
     }
 
-    .buttons a {
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- HEADER ---------- */
+    .site-header {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
       text-decoration: none;
     }
 
-    button {
-      background: var(--button-bg);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    .logo i {
+      font-size: 18px;
+      color: var(--primary);
     }
 
-    button:hover {
-      background: var(--button-hover);
+    .header-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 12px;
     }
 
-    footer {
+    /* ---------- HERO ---------- */
+    .hero {
+      padding: 4rem 2rem 2rem;
       text-align: center;
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      color: var(--footer-color);
+      max-width: 640px;
+      margin: 0 auto;
     }
 
-    .theme-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 999;
-      border: none;
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 100px;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      font-size: 1.25rem;
+      background: var(--primary);
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ---------- CARD GRID ---------- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-border);
+    }
+
+    .card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      background-color: var(--button-bg);
-      color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 18px;
+      color: var(--primary);
+      flex-shrink: 0;
     }
 
-    body.dark .theme-toggle {
-      background-color: #ffffff;
-      color: #121212;
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
     }
 
-    .theme-toggle:hover {
-      transform: scale(1.1);
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
     }
 
-    .theme-toggle:active {
-      transform: scale(0.95);
+    .card-arrow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 4px;
     }
 
-    .theme-toggle:focus {
-      outline: none;
+    .card-arrow i { font-size: 10px; transition: transform 0.18s; }
+    .card:hover .card-arrow i { transform: translateX(4px); }
+
+    /* Card prenotazione — evidenziata */
+    .card.featured {
+      border-color: var(--primary-border);
+      background: var(--primary-light);
     }
 
+    .card.featured .card-title { color: var(--primary); }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    /* ---------- TOAST ---------- */
     #toast {
       position: fixed;
-      top: 0.5rem;
+      top: 72px;
       left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background-color: var(--button-bg);
-      color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateX(-50%) translateY(-12px);
+      background: var(--text);
+      color: var(--bg-alt);
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
       z-index: 1000;
       opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      display: none;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 2.5rem 1.25rem 1.5rem; }
+      .cards-grid { padding: 0 1.25rem 3rem; gap: 12px; }
+      .site-header { padding: 0 1.25rem; }
+      .header-badge { display: none; }
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()" title="Cambia tema" aria-label="Cambia tema">🌙</button>
 
-  <h1>Prenotazione laboratorio multimediale e dispositivi - Liceo di Follonica</h1>
-  <p>Il Liceo di Follonica dispone di un laboratorio multimediale con postazioni fisse, un carrello mobile con notebook di ultima generazione e un ulteriore carrello mobile con iPad.</p>
+  <header class="site-header">
+    <a href="#" class="logo">
+      <i class="fas fa-school"></i>
+      <span>Liceo di Follonica</span>
+    </a>
+    <span class="header-badge">a.s. 2025/2026</span>
+  </header>
 
-  <div class="buttons">
-    <a href="https://forms.gle/JuLfANsMMFMz1rCt7"><button>Prenota</button></a>
-    <a href="labmulti.html"><button>Disponibilità Lab. multimediale</button></a>
-    <a href="calendarioaml.html"><button>Calendario Aula Magna Liceo</button></a>
-    <!-- <a href="2hedcivica2.seb"><button>2H - Ed Civica 2</button></a> -->
+  <section class="hero">
+    <div class="hero-eyebrow">Prenotazioni online</div>
+    <h1>Laboratori e dispositivi</h1>
+    <p>Prenota il laboratorio multimediale, i carrelli iPad e notebook del Liceo di Follonica. Verifica la disponibilità in tempo reale.</p>
+  </section>
+
+  <div class="cards-grid">
+
+    <a href="https://forms.gle/JuLfANsMMFMz1rCt7" class="card featured">
+      <div class="card-icon"><i class="fas fa-calendar-plus"></i></div>
+      <div class="card-title">Nuova prenotazione</div>
+      <div class="card-desc">Compila il modulo per prenotare il laboratorio multimediale, il carrello iPad o il carrello notebook.</div>
+      <div class="card-arrow">Vai al modulo <i class="fas fa-arrow-right"></i></div>
+    </a>
+
+    <a href="labmulti.html" class="card">
+      <div class="card-icon"><i class="fas fa-desktop"></i></div>
+      <div class="card-title">Disponibilità Lab. multimediale</div>
+      <div class="card-desc">Visualizza l'orario fisso e le prenotazioni del laboratorio multimediale aggiornate in tempo reale.</div>
+      <div class="card-arrow">Visualizza <i class="fas fa-arrow-right"></i></div>
+    </a>
+
+    <a href="calendarioaml.html" class="card">
+      <div class="card-icon"><i class="fas fa-chalkboard"></i></div>
+      <div class="card-title">Calendario Aula Magna</div>
+      <div class="card-desc">Consulta il calendario delle prenotazioni dell'Aula Magna del Liceo.</div>
+      <div class="card-arrow">Visualizza <i class="fas fa-arrow-right"></i></div>
+    </a>
+
+    <!-- <a href="2hedcivica2.seb" class="card">
+      <div class="card-icon"><i class="fas fa-file"></i></div>
+      <div class="card-title">2H - Ed Civica 2</div>
+      <div class="card-desc"></div>
+      <div class="card-arrow">Apri <i class="fas fa-arrow-right"></i></div>
+    </a> -->
+
   </div>
 
-  <footer>© 2024 Nicola. Tutti i diritti riservati.</footer>
+  <footer>© 2025 Nicola Cantalupo — Liceo di Follonica. Tutti i diritti riservati.</footer>
 
   <div id="toast"></div>
 
-  <script>
-    const body = document.body;
-    const toggleBtn = document.querySelector('.theme-toggle');
-    const toggleSound = new Audio('ding.mp3');
-    toggleSound.volume = 0.4;
-
-    function setThemeIcon(isDark) {
-      toggleBtn.textContent = isDark ? '☀️' : '🌙';
-    }
-
-    function toggleTheme() {
-      body.classList.toggle('dark');
-      const isDark = body.classList.contains('dark');
-      setThemeIcon(isDark);
-      toggleSound.play().catch(() => {});
-      showToast(`Tema ${isDark ? 'scuro' : 'chiaro'} attivato temporaneamente`);
-    }
-
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.display = 'block';
-      requestAnimationFrame(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-      });
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(-20px)';
-        setTimeout(() => {
-          toast.style.display = 'none';
-        }, 300);
-      }, 2500);
-    }
-
-    (function applySystemTheme() {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) body.classList.add('dark');
-      setThemeIcon(body.classList.contains('dark'));
-    })();
-  </script>
 </body>
 </html>
