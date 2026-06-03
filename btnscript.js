@@ -70,3 +70,21 @@
     // Esporta la funzione globalmente per l'uso nei pulsanti HTML
     window.btnprenota = btnprenota;
 })();
+
+// Aggiunta in fondo al tuo btnscript.js esistente:
+// Gestione tab mobile per navigazione tra settimane
+
+function mostraTab(numero) {
+  // Nascondi tutte le settimane
+  for (var i = 1; i <= 5; i++) {
+    var wrapper = document.getElementById('settimana-' + i);
+    var tab = document.getElementById('tab-' + i);
+    if (wrapper) wrapper.classList.remove('tab-attiva');
+    if (tab) tab.classList.remove('attiva');
+  }
+  // Mostra la settimana selezionata
+  var target = document.getElementById('settimana-' + numero);
+  var tabAttiva = document.getElementById('tab-' + numero);
+  if (target) target.classList.add('tab-attiva');
+  if (tabAttiva) tabAttiva.classList.add('attiva');
+}
