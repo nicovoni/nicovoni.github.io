@@ -53,7 +53,11 @@
     function buildSafeURL(baseURL, params) {
         const url = new URL(baseURL);
         for (const [key, value] of Object.entries(params)) {
-            url.searchParams.append(key, encodeURIComponent(value));
+            // FIX DOUBLE-ENCODING: url.searchParams.append() chiama internamente
+            // encodeURIComponent — non va applicato manualmente, altrimenti
+            // la data "01/06/2025" diventava "01%252F06%252F2025" e il backend
+            // riceveva un formato non riconoscibile.
+            url.searchParams.append(key, value);
         }
         return url.toString();
     }
