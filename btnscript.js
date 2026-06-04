@@ -1,94 +1,213 @@
 (function () {
-    /**
-     * Funzione per gestire il click del pulsante di prenotazione.
-     * @param {HTMLElement} button - Il pulsante cliccato.
-     */
-    function btnprenota(button) {
-        try {
-            // Validazione del pulsante
-            if (!button || !button.parentNode) {
-                throw new Error("Elemento pulsante non valido o mancante.");
-            }
 
-            // Ottieni la cella padre del pulsante
-            const cella = button.parentNode;
+  // ---------------------------------------------------------------------------
+  // Dialog inline — sostituisce il confirm() nativo del browser,
+  // che può essere bloccato silenziosamente da policy di dominio o iframe.
+  // Iniettato una volta sola nel DOM al primo utilizzo.
+  // ---------------------------------------------------------------------------
+  var dialogIniettato = false;
 
-            // Estrai gli attributi slotora e slotdata
-            const slotOra = cella.getAttribute("slotora");
-            const slotData = cella.getAttribute("slotdata");
+  function iniettatDialog() {
+    if (dialogIniettato) return;
+    dialogIniettato = true;
 
-            // Validazione degli attributi
-            if (!slotOra || !slotData) {
-                throw new Error("Dati mancanti per la prenotazione. Verifica che gli attributi 'slotora' e 'slotdata' siano impostati.");
-            }
+    // Overlay + dialog
+    var overlay = document.createElement('div');
+    overlay.id = 'prenota-overlay';
+    overlay.innerHTML = [
+      '<div id="prenota-dialog" role="dialog" aria-modal="true" aria-labelledby="prenota-titolo">',
+      '  <div id="prenota-icon">📅</div>',
+      '  <div id="prenota-titolo">Conferma prenotazione</div>',
+      '  <div id="prenota-dettagli"></div>',
+      '  <div id="prenota-azioni">',
+      '    <button id="prenota-btn-annulla" type="button">Annulla</button>',
+      '    <button id="prenota-btn-conferma" type="button">Prenota</button>',
+      '  </div>',
+      '</div>'
+    ].join('');
 
-            // Crea il messaggio di conferma
-            const messaggio = `Vuoi prenotare la ${sanitizeInput(slotOra)}ª ora del ${sanitizeInput(slotData)}?`;
+    document.body.appendChild(overlay);
 
-            // Mostra il messaggio di conferma
-            if (confirm(messaggio)) {
-                // Validazione e costruzione dell'URL
-                const baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbzN1P6AhCc0j47KShHcBnYooPegm2fA0zNbeSXUQymm_7Gv6Kc_blcoh5AZEJf6uO8M/exec";
-                const url = buildSafeURL(baseURL, { slotOra, slotData });
+    // Stili iniettati inline così non dipendono dall'ordine di caricamento del CSS
+    var style = document.createElement('style');
+    style.textContent = [
+      '#prenota-overlay {',
+      '  position: fixed; inset: 0;',
+      '  background: rgba(0,0,0,0.45);',
+      '  display: flex; align-items: center; justify-content: center;',
+      '  z-index: 9999;',
+      '  opacity: 0; visibility: hidden;',
+      '  transition: opacity 0.2s ease, visibility 0s linear 0.2s;',
+      '  padding: 16px;',
+      '}',
+      '#prenota-overlay.aperto {',
+      '  opacity: 1; visibility: visible;',
+      '  transition: opacity 0.2s ease;',
+      '}',
+      '#prenota-dialog {',
+      '  background: var(--bg-alt, #fff);',
+      '  border: 1px solid var(--border, #e5e7eb);',
+      '  border-radius: var(--radius, 12px);',
+      '  box-shadow: var(--shadow-lg, 0 8px 32px rgba(0,0,0,0.15));',
+      '  padding: 28px 28px 24px;',
+      '  width: 100%; max-width: 340px;',
+      '  text-align: center;',
+      '  transform: translateY(8px);',
+      '  transition: transform 0.2s ease;',
+      '}',
+      '#prenota-overlay.aperto #prenota-dialog {',
+      '  transform: translateY(0);',
+      '}',
+      '#prenota-icon {',
+      '  font-size: 32px; margin-bottom: 10px;',
+      '}',
+      '#prenota-titolo {',
+      '  font-family: var(--font, inherit);',
+      '  font-size: 16px; font-weight: 700;',
+      '  color: var(--text, #111827);',
+      '  margin-bottom: 8px;',
+      '}',
+      '#prenota-dettagli {',
+      '  font-size: 14px;',
+      '  color: var(--text-muted, #6b7280);',
+      '  line-height: 1.6;',
+      '  margin-bottom: 22px;',
+      '}',
+      '#prenota-dettagli strong {',
+      '  color: var(--text, #111827);',
+      '  font-weight: 600;',
+      '}',
+      '#prenota-azioni {',
+      '  display: flex; gap: 10px;',
+      '}',
+      '#prenota-btn-annulla {',
+      '  flex: 1; padding: 10px;',
+      '  background: var(--bg, #f3f4f6);',
+      '  border: 1px solid var(--border, #e5e7eb);',
+      '  border-radius: var(--radius-sm, 8px);',
+      '  font-size: 14px; font-weight: 600;',
+      '  color: var(--text-muted, #6b7280);',
+      '  cursor: pointer;',
+      '  font-family: inherit;',
+      '}',
+      '#prenota-btn-conferma {',
+      '  flex: 1; padding: 10px;',
+      '  background: var(--primary, #1a56db);',
+      '  border: none;',
+      '  border-radius: var(--radius-sm, 8px);',
+      '  font-size: 14px; font-weight: 600;',
+      '  color: #fff;',
+      '  cursor: pointer;',
+      '  font-family: inherit;',
+      '}',
+    ].join('\n');
+    document.head.appendChild(style);
 
-                // Reindirizza l'utente alla nuova pagina servita da Apps Script
-                window.location.href = url;
-            } else {
-                // L'utente ha annullato l'operazione
-                alert("Prenotazione annullata.");
-            }
-        } catch (error) {
-            // Log dell'errore per debugging e messaggio all'utente
-            console.error("Errore durante la prenotazione:", error);
-            alert("Si è verificato un errore durante la prenotazione. Riprova più tardi.");
-        }
+    // Chiudi cliccando l'overlay fuori dal dialog
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) chiudiDialog();
+    });
+
+    // Chiudi con Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') chiudiDialog();
+    });
+  }
+
+  function apriDialog(slotOra, slotData, onConferma) {
+    iniettatDialog();
+    document.getElementById('prenota-dettagli').innerHTML =
+      '<strong>' + sanitizeInput(slotOra) + 'ª ora</strong> del <strong>' + sanitizeInput(slotData) + '</strong>';
+
+    var overlay  = document.getElementById('prenota-overlay');
+    var btnConf  = document.getElementById('prenota-btn-conferma');
+    var btnAnn   = document.getElementById('prenota-btn-annulla');
+
+    // Rimuovi listener precedenti clonando i bottoni
+    var nuovoBtnConf = btnConf.cloneNode(true);
+    var nuovoBtnAnn  = btnAnn.cloneNode(true);
+    btnConf.parentNode.replaceChild(nuovoBtnConf, btnConf);
+    btnAnn.parentNode.replaceChild(nuovoBtnAnn, btnAnn);
+
+    nuovoBtnConf.addEventListener('click', function () {
+      chiudiDialog();
+      onConferma();
+    });
+    nuovoBtnAnn.addEventListener('click', chiudiDialog);
+
+    overlay.classList.add('aperto');
+    nuovoBtnConf.focus();
+  }
+
+  function chiudiDialog() {
+    var overlay = document.getElementById('prenota-overlay');
+    if (overlay) overlay.classList.remove('aperto');
+  }
+
+  // ---------------------------------------------------------------------------
+  // btnprenota — chiamata dal onclick="btnprenota(this)" nelle celle
+  // ---------------------------------------------------------------------------
+  function btnprenota(button) {
+    try {
+      if (!button || !button.parentNode) {
+        throw new Error("Elemento pulsante non valido o mancante.");
+      }
+
+      var cella   = button.parentNode;
+      var slotOra  = cella.getAttribute("slotora");
+      var slotData = cella.getAttribute("slotdata");
+
+      if (!slotOra || !slotData) {
+        throw new Error("Dati mancanti per la prenotazione.");
+      }
+
+      apriDialog(slotOra, slotData, function () {
+        var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbzN1P6AhCc0j47KShHcBnYooPegm2fA0zNbeSXUQymm_7Gv6Kc_blcoh5AZEJf6uO8M/exec";
+        var url = buildSafeURL(baseURL, { slotOra: slotOra, slotData: slotData });
+        window.location.href = url;
+      });
+
+    } catch (error) {
+      console.error("Errore durante la prenotazione:", error);
+      alert("Si è verificato un errore durante la prenotazione. Riprova più tardi.");
     }
+  }
 
-    /**
-     * Funzione di utilità per costruire un URL sicuro con parametri.
-     * @param {string} baseURL - L'URL base.
-     * @param {Object} params - Oggetto con i parametri della query string.
-     * @returns {string} - URL completo e sicuro.
-     */
-    function buildSafeURL(baseURL, params) {
-        const url = new URL(baseURL);
-        for (const [key, value] of Object.entries(params)) {
-            // FIX DOUBLE-ENCODING: url.searchParams.append() chiama internamente
-            // encodeURIComponent — non va applicato manualmente, altrimenti
-            // la data "01/06/2025" diventava "01%252F06%252F2025" e il backend
-            // riceveva un formato non riconoscibile.
-            url.searchParams.append(key, value);
-        }
-        return url.toString();
+  // ---------------------------------------------------------------------------
+  // Utilities
+  // ---------------------------------------------------------------------------
+  function buildSafeURL(baseURL, params) {
+    var url = new URL(baseURL);
+    for (var key in params) {
+      if (params.hasOwnProperty(key)) {
+        // url.searchParams.append codifica già internamente — nessun encodeURIComponent manuale
+        url.searchParams.append(key, params[key]);
+      }
     }
+    return url.toString();
+  }
 
-    /**
-     * Funzione di utilità per sanificare input.
-     * @param {string} input - La stringa da sanificare.
-     * @returns {string} - Input sanificato.
-     */
-    function sanitizeInput(input) {
-        return input.replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
-    }
+  function sanitizeInput(input) {
+    return String(input).replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
+  }
 
-    // Esporta la funzione globalmente per l'uso nei pulsanti HTML
-    window.btnprenota = btnprenota;
+  // Esporta globalmente
+  window.btnprenota = btnprenota;
+
 })();
 
-// Aggiunta in fondo al tuo btnscript.js esistente:
+// ---------------------------------------------------------------------------
 // Gestione tab mobile per navigazione tra settimane
-
+// ---------------------------------------------------------------------------
 function mostraTab(numero) {
-  // Nascondi tutte le settimane
   for (var i = 1; i <= 5; i++) {
     var wrapper = document.getElementById('settimana-' + i);
-    var tab = document.getElementById('tab-' + i);
+    var tab     = document.getElementById('tab-' + i);
     if (wrapper) wrapper.classList.remove('tab-attiva');
-    if (tab) tab.classList.remove('attiva');
+    if (tab)     tab.classList.remove('attiva');
   }
-  // Mostra la settimana selezionata
-  var target = document.getElementById('settimana-' + numero);
+  var target   = document.getElementById('settimana-' + numero);
   var tabAttiva = document.getElementById('tab-' + numero);
-  if (target) target.classList.add('tab-attiva');
+  if (target)   target.classList.add('tab-attiva');
   if (tabAttiva) tabAttiva.classList.add('attiva');
 }
