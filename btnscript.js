@@ -249,9 +249,9 @@ function mostraTab(numero) {
     [12, 50, 13, 40],  // 6ª ora
   ];
 
-  // Colore della barra: grigio-blu semitrasparente, neutro su tutti i fondi
-  var COLORE_PASSATO  = 'rgba(100, 116, 139, 0.18)';
-  var COLORE_INCORSO  = 'rgba(26,  86, 219, 0.13)';
+  // Colori della striscia sul fondo della cella
+  var COLORE_PASSATO = '#94a3b8';  // grigio-blu, ora completamente passata
+  var COLORE_INCORSO = '#1a56db';  // blu primario, ora in corso
 
   /**
    * Restituisce la data odierna formattata "dd/MM/yyyy"
@@ -270,26 +270,45 @@ function mostraTab(numero) {
   function toMinuti(h, m) { return h * 60 + m; }
 
   /**
-   * Applica il gradiente a una cella <td> in base alla percentuale (0-100).
-   * Usa background-image così non sovrascrive background-color.
-   * La direzione è da sinistra (passato) a destra (futuro).
+   * Applica la striscia di avanzamento sul fondo della cella.
+   * Usa un <div> assoluto largo pct% — completamente indipendente
+   * dal background della cella, visibile su qualsiasi colore di sfondo.
    */
-  function applicaGradiente(cella, pct, incorso) {
-    var colore = incorso ? COLORE_INCORSO : COLORE_PASSATO;
-    if (pct >= 100) {
-      cella.style.backgroundImage =
-        'linear-gradient(to right, ' + COLORE_PASSATO + ' 100%, transparent 100%)';
-    } else {
-      cella.style.backgroundImage =
-        'linear-gradient(to right, ' + colore + ' ' + pct + '%, transparent ' + pct + '%)';
+  function applicaStriscia(cella, pct, incorso) {
+    // Assicura che la cella abbia position:relative per il div assoluto
+    cella.style.position = 'relative';
+
+    var id = 'barra-ora-' + cella.getAttribute('slotora') + '-' + cella.getAttribute('slotdata').replace(/\//g, '');
+    var barra = document.getElementById(id);
+    if (!barra) {
+      barra = document.createElement('div');
+      barra.id = id;
+      barra.style.cssText = [
+        'position:absolute',
+        'bottom:0',
+        'left:0',
+        'height:3px',
+        'border-radius:0 2px 2px 0',
+        'transition:width 0.6s ease, background-color 0.3s ease',
+        'pointer-events:none',
+        'z-index:1',
+      ].join(';');
+      cella.appendChild(barra);
     }
+    barra.style.width = Math.min(pct, 100) + '%';
+    barra.style.backgroundColor = incorso ? COLORE_INCORSO : COLORE_PASSATO;
+    // Rimuovi eventuale gradiente residuo da versioni precedenti
+    cella.style.backgroundImage = '';
   }
 
   /**
-   * Rimuove il gradiente da una cella
+   * Rimuove la striscia da una cella (ora futura)
    */
-  function rimuoviGradiente(cella) {
+  function rimuoviStriscia(cella) {
     cella.style.backgroundImage = '';
+    var id = 'barra-ora-' + cella.getAttribute('slotora') + '-' + cella.getAttribute('slotdata').replace(/\//g, '');
+    var barra = document.getElementById(id);
+    if (barra) barra.style.width = '0';
   }
 
   /**
@@ -316,22 +335,21 @@ function mostraTab(numero) {
 
       if (minutiAdesso < inizioMin) {
         // Ora futura: nessun effetto
-        rimuoviGradiente(cella);
+        rimuoviStriscia(cella);
       } else if (minutiAdesso >= fineMin) {
         // Ora completamente passata: 100%
-        applicaGradiente(cella, 100, false);
+        applicaStriscia(cella, 100, false);
       } else {
         // Ora in corso: percentuale proporzionale ai minuti trascorsi
         var trascorsi = minutiAdesso - inizioMin;
         var pct = Math.round((trascorsi / durataMin) * 100);
-        applicaGradiente(cella, pct, true);
+        applicaStriscia(cella, pct, true);
       }
     });
   }
 
-  // Lo script è caricato con defer: il DOM è già pronto quando questo codice
-  // viene eseguito, quindi chiamiamo aggiorna() direttamente senza attendere
-  // DOMContentLoaded (che sarebbe già scattato e non si riattiva).
+  // Piccolo delay per garantire che il DOM sia completamente renderizzato
+  // prima della prima esecuzione, poi aggiornamento ogni 60 secondi.
   setTimeout(function() {
     aggiorna();
     setInterval(aggiorna, 60000);
