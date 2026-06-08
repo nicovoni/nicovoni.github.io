@@ -332,7 +332,9 @@ function mostraTab(numero) {
   // Lo script è caricato con defer: il DOM è già pronto quando questo codice
   // viene eseguito, quindi chiamiamo aggiorna() direttamente senza attendere
   // DOMContentLoaded (che sarebbe già scattato e non si riattiva).
+  setTimeout(function() {
     aggiorna();
     setInterval(aggiorna, 60000);
+  }, 300);
 
 })();
