@@ -329,15 +329,10 @@ function mostraTab(numero) {
     });
   }
 
-  // Esegui subito al caricamento della pagina, poi ogni 60 secondi
-  document.addEventListener('DOMContentLoaded', function () {
+  // Lo script è caricato con defer: il DOM è già pronto quando questo codice
+  // viene eseguito, quindi chiamiamo aggiorna() direttamente senza attendere
+  // DOMContentLoaded (che sarebbe già scattato e non si riattiva).
     aggiorna();
     setInterval(aggiorna, 60000);
-  });
-
-  // Fallback: se DOMContentLoaded è già scattato (script caricato con defer)
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    aggiorna();
-  }
 
 })();
