@@ -153,7 +153,7 @@
         throw new Error("Elemento pulsante non valido o mancante.");
       }
 
-      var cella   = button.parentNode;
+      var cella    = button.parentNode;
       var slotOra  = cella.getAttribute("slotora");
       var slotData = cella.getAttribute("slotdata");
 
@@ -180,7 +180,6 @@
     var url = new URL(baseURL);
     for (var key in params) {
       if (params.hasOwnProperty(key)) {
-        // url.searchParams.append codifica già internamente — nessun encodeURIComponent manuale
         url.searchParams.append(key, params[key]);
       }
     }
@@ -206,8 +205,139 @@ function mostraTab(numero) {
     if (wrapper) wrapper.classList.remove('tab-attiva');
     if (tab)     tab.classList.remove('attiva');
   }
-  var target   = document.getElementById('settimana-' + numero);
+  var target    = document.getElementById('settimana-' + numero);
   var tabAttiva = document.getElementById('tab-' + numero);
-  if (target)   target.classList.add('tab-attiva');
+  if (target)    target.classList.add('tab-attiva');
   if (tabAttiva) tabAttiva.classList.add('attiva');
 }
+
+// ---------------------------------------------------------------------------
+// BARRA DI PROGRESSO ORARIA
+// Colora le celle del giorno corrente in base all'ora attuale.
+//
+// Scansione oraria:
+//   1ª  08:00 – 08:50  (50 min)
+//   2ª  08:50 – 09:45  (55 min)
+//   --- ricreazione 09:45 – 09:55 ---
+//   3ª  09:55 – 10:50  (55 min)
+//   4ª  10:50 – 11:45  (55 min)
+//   --- ricreazione 11:45 – 11:55 ---
+//   5ª  11:55 – 12:50  (55 min)
+//   6ª  12:50 – 13:40  (50 min)
+//
+// Logica:
+//   - Prima delle 08:00: nessun effetto
+//   - Ora passata: cella colorata al 100%
+//   - Ora in corso: cella colorata proporzionalmente ai minuti trascorsi
+//   - Ora futura: nessun effetto
+//   - Dopo le 13:40: tutte le celle al 100%
+//
+// Tecnica: background-image con linear-gradient sovrapposto al colore
+// esistente della cella, così spazioprenotato/dada/orario-fisso restano
+// leggibili. L'attributo slotdata sulla cella viene confrontato con la
+// data odierna per agire solo sulla riga del giorno corrente.
+// ---------------------------------------------------------------------------
+(function () {
+
+  // Slot orari: [oraInizio, minutoInizio, oraFine, minutoFine]
+  var SLOT = [
+    [8,  0,  8,  50],  // 1ª ora
+    [8,  50, 9,  45],  // 2ª ora
+    [9,  55, 10, 50],  // 3ª ora (dopo ricreazione)
+    [10, 50, 11, 45],  // 4ª ora
+    [11, 55, 12, 50],  // 5ª ora (dopo ricreazione)
+    [12, 50, 13, 40],  // 6ª ora
+  ];
+
+  // Colore della barra: grigio-blu semitrasparente, neutro su tutti i fondi
+  var COLORE_PASSATO  = 'rgba(100, 116, 139, 0.18)';
+  var COLORE_INCORSO  = 'rgba(26,  86, 219, 0.13)';
+
+  /**
+   * Restituisce la data odierna formattata "dd/MM/yyyy"
+   */
+  function oggiFormattato() {
+    var d = new Date();
+    var dd = String(d.getDate()).padStart(2, '0');
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var yyyy = d.getFullYear();
+    return dd + '/' + mm + '/' + yyyy;
+  }
+
+  /**
+   * Calcola i minuti dall'inizio della giornata per un orario hh:mm
+   */
+  function toMinuti(h, m) { return h * 60 + m; }
+
+  /**
+   * Applica il gradiente a una cella <td> in base alla percentuale (0-100).
+   * Usa background-image così non sovrascrive background-color.
+   * La direzione è da sinistra (passato) a destra (futuro).
+   */
+  function applicaGradiente(cella, pct, incorso) {
+    var colore = incorso ? COLORE_INCORSO : COLORE_PASSATO;
+    if (pct >= 100) {
+      cella.style.backgroundImage =
+        'linear-gradient(to right, ' + COLORE_PASSATO + ' 100%, transparent 100%)';
+    } else {
+      cella.style.backgroundImage =
+        'linear-gradient(to right, ' + colore + ' ' + pct + '%, transparent ' + pct + '%)';
+    }
+  }
+
+  /**
+   * Rimuove il gradiente da una cella
+   */
+  function rimuoviGradiente(cella) {
+    cella.style.backgroundImage = '';
+  }
+
+  /**
+   * Aggiorna tutte le celle della tabella per il giorno corrente.
+   * Viene chiamata subito al caricamento e poi ogni 60 secondi.
+   */
+  function aggiorna() {
+    var oggi = oggiFormattato();
+    var adesso = new Date();
+    var minutiAdesso = toMinuti(adesso.getHours(), adesso.getMinutes());
+
+    // Seleziona tutte le celle con attributo slotdata uguale a oggi
+    var celle = document.querySelectorAll('td[slotdata="' + oggi + '"]');
+    if (celle.length === 0) return; // giorno non presente nella pagina (weekend, fuori range)
+
+    celle.forEach(function (cella) {
+      var ora = parseInt(cella.getAttribute('slotora'), 10);
+      if (!ora || ora < 1 || ora > 6) return;
+
+      var slot       = SLOT[ora - 1];
+      var inizioMin  = toMinuti(slot[0], slot[1]);
+      var fineMin    = toMinuti(slot[2], slot[3]);
+      var durataMin  = fineMin - inizioMin;
+
+      if (minutiAdesso < inizioMin) {
+        // Ora futura: nessun effetto
+        rimuoviGradiente(cella);
+      } else if (minutiAdesso >= fineMin) {
+        // Ora completamente passata: 100%
+        applicaGradiente(cella, 100, false);
+      } else {
+        // Ora in corso: percentuale proporzionale ai minuti trascorsi
+        var trascorsi = minutiAdesso - inizioMin;
+        var pct = Math.round((trascorsi / durataMin) * 100);
+        applicaGradiente(cella, pct, true);
+      }
+    });
+  }
+
+  // Esegui subito al caricamento della pagina, poi ogni 60 secondi
+  document.addEventListener('DOMContentLoaded', function () {
+    aggiorna();
+    setInterval(aggiorna, 60000);
+  });
+
+  // Fallback: se DOMContentLoaded è già scattato (script caricato con defer)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    aggiorna();
+  }
+
+})();
