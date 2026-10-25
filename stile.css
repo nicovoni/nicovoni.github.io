@@ -470,6 +470,11 @@ h1 {
   .settimana-wrapper { display: block !important; }
 }
 /* ---------- 7ª ORA ---------- */
+:root { --ambra: #d97706; }
+@media (prefers-color-scheme: dark) {
+  :root { --ambra: #fbbf24; }
+}
+
 .settimana-wrapper { position: relative; }
 
 /* Freccia nella cella della 6ª ora */
@@ -499,16 +504,34 @@ h1 {
 .btn-settima i { transition: transform 0.2s ease; }
 .btn-settima[aria-expanded="true"] i { transform: rotate(180deg); }
 
+/* 7ª ora da orario fisso: freccia ambra con pallino */
+.btn-settima.fissa { color: var(--ambra); opacity: 1; }
+.btn-settima.fissa::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ambra);
+}
+.btn-settima.fissa:hover,
+.btn-settima.fissa[aria-expanded="true"] { background: rgba(217, 119, 6, 0.14); }
+.btn-settima.fissa:focus-visible { box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.3); }
+
 @keyframes settima-in {
   from { opacity: 0; transform: translateX(-6px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* DESKTOP: la 7ª ora è nascosta e, quando aperta, compare a destra della riga */
+/* DESKTOP: la 7ª ora è un elemento fuori dalla tabella, visibile solo se aperto */
 @media (min-width: 769px) {
-  .container td.settima-cella { display: none; }
+  .container td.settima-mobile { display: none; }
 
-  .container td.settima-cella.aperta {
+  .settima-desktop { display: none; }
+
+  .settima-desktop.aperta {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -518,14 +541,19 @@ h1 {
     left: calc(100% + 6px);
     width: 78px;               /* top e height li imposta btnscript.js */
     padding: 0.3rem 0.4rem;
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
+    font-size: 0.82rem;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     animation: settima-in 0.18s ease;
   }
 
-  .container td.settima-cella.settima-libera.aperta { background: var(--bg-alt); }
+  .settima-desktop.settima-libera.aperta { background: var(--bg-alt); }
 
-  .container td.settima-cella.aperta::before {
+  .settima-desktop.aperta::before {
     content: attr(data-label);
     font-size: 0.62rem;
     font-weight: 600;
@@ -544,4 +572,5 @@ h1 {
 /* MOBILE: nessuna freccia, la 7ª ora è una normale riga della card */
 @media (max-width: 768px) {
   .btn-settima { display: none; }
+  .settima-desktop { display: none; }
 }
