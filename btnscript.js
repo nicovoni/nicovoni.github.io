@@ -1,3 +1,10 @@
+/*!
+ * Prenotazione Laboratorio Multimediale — Liceo di Follonica
+ * © 2026 Nicola Cantalupo — https://github.com/nicovoni/nicovoni.github.io
+ * Licenza MIT: puoi riutilizzare e modificare questo file mantenendo
+ * questo avviso di copyright. Vedi il file LICENSE.
+ */
+
 (function () {
 
   // ---------------------------------------------------------------------------
