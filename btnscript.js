@@ -276,13 +276,20 @@ function mostraTab(numero) {
    * Usa un <div> assoluto largo pct% — completamente indipendente
    * dal background della cella, visibile su qualsiasi colore di sfondo.
    */
+  // Id univoco della barra: la 7ª ora ha due versioni (mobile e desktop)
+  function idBarra(cella) {
+    return 'barra-ora-' + cella.getAttribute('slotora') + '-' +
+      cella.getAttribute('slotdata').replace(/\//g, '') +
+      (cella.classList.contains('settima-desktop') ? '-d' : '');
+  }
+
   function applicaStriscia(cella, pct, incorso) {
-    // Non sovrascrivere position:absolute della cella della 7ª ora (desktop)
+    // Non sovrascrivere position:absolute della 7ª ora desktop
     if (window.getComputedStyle(cella).position === 'static') {
       cella.style.position = 'relative';
     }
 
-    var id = 'barra-ora-' + cella.getAttribute('slotora') + '-' + cella.getAttribute('slotdata').replace(/\//g, '');
+    var id = idBarra(cella);
     var barra = document.getElementById(id);
     if (!barra) {
       barra = document.createElement('div');
@@ -300,21 +307,18 @@ function mostraTab(numero) {
       cella.appendChild(barra);
     }
     barra.style.width = Math.min(pct, 100) + '%';
+
     var oraCella = parseInt(cella.getAttribute('slotora'), 10);
     barra.style.backgroundColor = (oraCella === 7)
       ? COLORE_SETTIMA
       : (incorso ? COLORE_INCORSO : COLORE_PASSATO);
-    // Rimuovi eventuale gradiente residuo da versioni precedenti
+
     cella.style.backgroundImage = '';
   }
 
-  /**
-   * Rimuove la striscia da una cella (ora futura)
-   */
   function rimuoviStriscia(cella) {
     cella.style.backgroundImage = '';
-    var id = 'barra-ora-' + cella.getAttribute('slotora') + '-' + cella.getAttribute('slotdata').replace(/\//g, '');
-    var barra = document.getElementById(id);
+    var barra = document.getElementById(idBarra(cella));
     if (barra) barra.style.width = '0';
   }
 
@@ -328,7 +332,9 @@ function mostraTab(numero) {
     var minutiAdesso = toMinuti(adesso.getHours(), adesso.getMinutes());
 
     // Seleziona tutte le celle con attributo slotdata uguale a oggi
-    var celle = document.querySelectorAll('td[slotdata="' + oggi + '"]');
+    var celle = document.querySelectorAll(
+      'td[slotdata="' + oggi + '"], div.settima-desktop[slotdata="' + oggi + '"]'
+    );
     if (celle.length === 0) return; // giorno non presente nella pagina (weekend, fuori range)
 
     celle.forEach(function (cella) {
@@ -364,6 +370,7 @@ function mostraTab(numero) {
 
 })();
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // 7ª ORA A COMPARSA (solo desktop)
 // ---------------------------------------------------------------------------
 function toggleSettima(btn) {
@@ -381,15 +388,16 @@ function toggleSettima(btn) {
   posizionaSettima(cella);
 }
 
-// La cella è assoluta: allineo top e altezza alla riga del giorno.
-// Su mobile (o se chiusa) rimuovo gli stili inline.
+// La cella è assoluta nel wrapper: allineo top e altezza alla riga del giorno.
 function posizionaSettima(cella) {
   if (!window.matchMedia('(min-width: 769px)').matches || !cella.classList.contains('aperta')) {
     cella.style.top = '';
     cella.style.height = '';
     return;
   }
-  var riga    = cella.parentNode;
+
+  var btn     = document.querySelector('[aria-controls="' + cella.id + '"]');
+  var riga    = btn ? btn.closest('tr') : null;
   var wrapper = cella.closest('.settimana-wrapper');
   if (!riga || !wrapper) return;
 
@@ -400,5 +408,5 @@ function posizionaSettima(cella) {
 }
 
 window.addEventListener('resize', function () {
-  document.querySelectorAll('.settima-cella').forEach(posizionaSettima);
+  document.querySelectorAll('.settima-desktop').forEach(posizionaSettima);
 });
