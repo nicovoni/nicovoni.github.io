@@ -469,3 +469,79 @@ h1 {
   .tabs-container { display: none; }
   .settimana-wrapper { display: block !important; }
 }
+/* ---------- 7ª ORA ---------- */
+.settimana-wrapper { position: relative; }
+
+/* Freccia nella cella della 6ª ora */
+.btn-settima {
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  color: var(--primary);
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+.btn-settima:hover,
+.btn-settima[aria-expanded="true"] { opacity: 1; background: var(--primary-light); }
+.btn-settima:focus-visible { outline: none; opacity: 1; box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.25); }
+.btn-settima i { transition: transform 0.2s ease; }
+.btn-settima[aria-expanded="true"] i { transform: rotate(180deg); }
+
+@keyframes settima-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* DESKTOP: la 7ª ora è nascosta e, quando aperta, compare a destra della riga */
+@media (min-width: 769px) {
+  .container td.settima-cella { display: none; }
+
+  .container td.settima-cella.aperta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    position: absolute;
+    left: calc(100% + 6px);
+    width: 78px;               /* top e height li imposta btnscript.js */
+    padding: 0.3rem 0.4rem;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    animation: settima-in 0.18s ease;
+  }
+
+  .container td.settima-cella.settima-libera.aperta { background: var(--bg-alt); }
+
+  .container td.settima-cella.aperta::before {
+    content: attr(data-label);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-style: normal;
+  }
+}
+
+/* Schermi medi: lascia spazio a destra per la cella della 7ª ora */
+@media (min-width: 769px) and (max-width: 1160px) {
+  .settimana-wrapper { width: calc(100% - 130px); margin-left: 24px; margin-right: 0; }
+}
+
+/* MOBILE: nessuna freccia, la 7ª ora è una normale riga della card */
+@media (max-width: 768px) {
+  .btn-settima { display: none; }
+}
