@@ -1,3 +1,15 @@
 User-agent: *
 Disallow: 
 Sitemap: https://nicovoni.github.io/sitemap.xml
+
+# Crawler usati per addestrare modelli di AI
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: CCBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: Bytespider
+User-agent: PerplexityBot
+Disallow: /
