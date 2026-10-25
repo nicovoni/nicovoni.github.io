@@ -247,11 +247,13 @@ function mostraTab(numero) {
     [10, 50, 11, 45],  // 4ª ora
     [11, 55, 12, 50],  // 5ª ora (dopo ricreazione)
     [12, 50, 13, 40],  // 6ª ora
+    [13, 40, 14, 30],  // 7ª ora
   ];
 
   // Colori della striscia sul fondo della cella
   var COLORE_PASSATO = '#94a3b8';  // grigio-blu, ora completamente passata
   var COLORE_INCORSO = '#1a56db';  // blu primario, ora in corso
+  var COLORE_SETTIMA = '#ff1a1a';  // rosso acceso, 7ª ora
 
   /**
    * Restituisce la data odierna formattata "dd/MM/yyyy"
@@ -275,8 +277,10 @@ function mostraTab(numero) {
    * dal background della cella, visibile su qualsiasi colore di sfondo.
    */
   function applicaStriscia(cella, pct, incorso) {
-    // Assicura che la cella abbia position:relative per il div assoluto
-    cella.style.position = 'relative';
+    // Non sovrascrivere position:absolute della cella della 7ª ora (desktop)
+    if (window.getComputedStyle(cella).position === 'static') {
+      cella.style.position = 'relative';
+    }
 
     var id = 'barra-ora-' + cella.getAttribute('slotora') + '-' + cella.getAttribute('slotdata').replace(/\//g, '');
     var barra = document.getElementById(id);
@@ -296,7 +300,10 @@ function mostraTab(numero) {
       cella.appendChild(barra);
     }
     barra.style.width = Math.min(pct, 100) + '%';
-    barra.style.backgroundColor = incorso ? COLORE_INCORSO : COLORE_PASSATO;
+    var oraCella = parseInt(cella.getAttribute('slotora'), 10);
+    barra.style.backgroundColor = (oraCella === 7)
+      ? COLORE_SETTIMA
+      : (incorso ? COLORE_INCORSO : COLORE_PASSATO);
     // Rimuovi eventuale gradiente residuo da versioni precedenti
     cella.style.backgroundImage = '';
   }
@@ -326,7 +333,7 @@ function mostraTab(numero) {
 
     celle.forEach(function (cella) {
       var ora = parseInt(cella.getAttribute('slotora'), 10);
-      if (!ora || ora < 1 || ora > 6) return;
+      if (!ora || ora < 1 || ora > 7) return;
 
       var slot       = SLOT[ora - 1];
       var inizioMin  = toMinuti(slot[0], slot[1]);
@@ -356,3 +363,42 @@ function mostraTab(numero) {
   }, 300);
 
 })();
+// ---------------------------------------------------------------------------
+// 7ª ORA A COMPARSA (solo desktop)
+// ---------------------------------------------------------------------------
+function toggleSettima(btn) {
+  var cella = document.getElementById(btn.getAttribute('aria-controls'));
+  if (!cella) return;
+
+  var aprire = !cella.classList.contains('aperta');
+  cella.classList.toggle('aperta', aprire);
+
+  var testo = aprire ? 'Nascondi la 7ª ora' : 'Mostra la 7ª ora';
+  btn.setAttribute('aria-expanded', aprire ? 'true' : 'false');
+  btn.setAttribute('aria-label', testo);
+  btn.title = testo;
+
+  posizionaSettima(cella);
+}
+
+// La cella è assoluta: allineo top e altezza alla riga del giorno.
+// Su mobile (o se chiusa) rimuovo gli stili inline.
+function posizionaSettima(cella) {
+  if (!window.matchMedia('(min-width: 769px)').matches || !cella.classList.contains('aperta')) {
+    cella.style.top = '';
+    cella.style.height = '';
+    return;
+  }
+  var riga    = cella.parentNode;
+  var wrapper = cella.closest('.settimana-wrapper');
+  if (!riga || !wrapper) return;
+
+  var r = riga.getBoundingClientRect();
+  var w = wrapper.getBoundingClientRect();
+  cella.style.top    = (r.top - w.top) + 'px';
+  cella.style.height = r.height + 'px';
+}
+
+window.addEventListener('resize', function () {
+  document.querySelectorAll('.settima-cella').forEach(posizionaSettima);
+});
