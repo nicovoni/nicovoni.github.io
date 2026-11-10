@@ -26,6 +26,7 @@
       '  <div id="prenota-icon">📅</div>',
       '  <div id="prenota-titolo">Conferma prenotazione</div>',
       '  <div id="prenota-dettagli"></div>',
+      '  <div id="prenota-avviso" hidden></div>',
       '  <div id="prenota-azioni">',
       '    <button id="prenota-btn-annulla" type="button">Annulla</button>',
       '    <button id="prenota-btn-conferma" type="button">Prenota</button>',
@@ -80,6 +81,15 @@
       '  line-height: 1.6;',
       '  margin-bottom: 22px;',
       '}',
+      '#prenota-avviso {',
+      '  font-size: 13px; line-height: 1.5;',
+      '  color: var(--ambra, #d97706);',
+      '  background: rgba(217,119,6,0.12);',
+      '  border: 1px solid rgba(217,119,6,0.35);',
+      '  border-radius: var(--radius-sm, 8px);',
+      '  padding: 8px 10px; margin: -8px 0 18px;',
+      '}',
+      '#prenota-avviso[hidden] { display: none; }',
       '#prenota-dettagli strong {',
       '  color: var(--text, #111827);',
       '  font-weight: 600;',
@@ -121,8 +131,13 @@
     });
   }
 
-  function apriDialog(slotOra, slotData, onConferma) {
+  function apriDialog(slotOra, slotData, provvisoria, onConferma) {
     iniettatDialog();
+    var avviso = document.getElementById('prenota-avviso');
+    avviso.hidden = !provvisoria;
+    avviso.textContent = provvisoria
+      ? 'Attenzione: l\u2019orario di questa settimana non è definitivo e potrebbe cambiare. Verifica la prenotazione quando esce il nuovo orario.'
+      : '';
     document.getElementById('prenota-dettagli').innerHTML =
       '<strong>' + sanitizeInput(slotOra) + 'ª ora</strong> del <strong>' + sanitizeInput(slotData) + '</strong>';
 
@@ -168,7 +183,15 @@
         throw new Error("Dati mancanti per la prenotazione.");
       }
 
-      apriDialog(slotOra, slotData, function () {
+      var msgBlocco = verificaPrenotabile(slotData);
+      if (msgBlocco) {
+        alert(msgBlocco);
+        return;
+      }
+      var wrapper = cella.closest('.settimana-wrapper');
+      var provvisoria = !!(wrapper && wrapper.classList.contains('provvisoria'));
+
+      apriDialog(slotOra, slotData, provvisoria, function () {
         var baseURL = "https://script.google.com/a/macros/isufol.it/s/AKfycbzN1P6AhCc0j47KShHcBnYooPegm2fA0zNbeSXUQymm_7Gv6Kc_blcoh5AZEJf6uO8M/exec";
         var url = buildSafeURL(baseURL, { slotOra: slotOra, slotData: slotData });
         window.location.href = url;
@@ -196,6 +219,80 @@
   function sanitizeInput(input) {
     return String(input).replace(/</g, "&lt;").replace(/>/g, "&gt;").trim();
   }
+
+  // ---------------------------------------------------------------------------
+  // Regole di prenotazione lato pagina (solo usabilità: il controllo vero è sul server)
+  // ---------------------------------------------------------------------------
+  var APERTURA_MIN = 7 * 60 + 30;    // 07:30
+  var CHIUSURA_MIN = 17 * 60 + 30;   // 17:30 (compreso)
+  var ANTICIPO_MIN_GIORNI = 1;
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  function giorniDaIso(iso) {
+    var p = iso.split('-');
+    return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000;
+  }
+
+  function fasciaAperta() {
+    var d = new Date();
+    var m = d.getHours() * 60 + d.getMinutes();
+    return m >= APERTURA_MIN && m <= CHIUSURA_MIN;
+  }
+
+  // Restituisce '' se prenotabile, altrimenti il motivo del blocco
+  function verificaPrenotabile(slotData) {
+    var p = slotData.split('/');
+    var d = new Date();
+    var oggi = d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+    var anticipo = giorniDaIso(p[2] + '-' + p[1] + '-' + p[0]) - giorniDaIso(oggi);
+    if (anticipo < ANTICIPO_MIN_GIORNI) {
+      return 'Non è possibile prenotare per oggi o per giorni passati: serve almeno un giorno di anticipo.';
+    }
+    if (!fasciaAperta()) {
+      return 'Le prenotazioni sono aperte dalle 07:30 alle 17:30.';
+    }
+    return '';
+  }
+
+  // Etichette "orario non definitivo", pulsanti attivi/disattivi, avviso fascia
+  function aggiornaStato() {
+    var validoFino = document.body.getAttribute('data-valido-fino') || '';
+
+    document.querySelectorAll('.settimana-wrapper').forEach(function (w, idx) {
+      var ven = w.getAttribute('data-venerdi') || '';
+      // Se manca la data di validità, tutte le settimane risultano non definitive (caso sicuro)
+      var prov = !validoFino || ven > validoFino;
+      w.classList.toggle('provvisoria', prov);
+
+      var tab = document.getElementById('tab-' + (idx + 1));
+      if (tab) tab.classList.toggle('provvisoria', prov);
+
+      var label = w.querySelector('.settimana-label');
+      var badge = label ? label.querySelector('.badge-provvisoria') : null;
+      if (prov && label && !badge) {
+        badge = document.createElement('span');
+        badge.className = 'badge-provvisoria';
+        badge.textContent = 'Orario non definitivo';
+        label.appendChild(badge);
+      } else if (!prov && badge) {
+        badge.remove();
+      }
+    });
+
+    document.querySelectorAll('.btn-aggiungi').forEach(function (b) {
+      var data = b.parentNode ? b.parentNode.getAttribute('slotdata') : null;
+      var msg = data ? verificaPrenotabile(data) : '';
+      b.disabled = !!msg;
+      b.title = msg;
+    });
+
+    var av = document.getElementById('avviso-fascia');
+    if (av) av.classList.toggle('chiuso', !fasciaAperta());
+  }
+
+  aggiornaStato();
+  setInterval(aggiornaStato, 60000);
 
   // Esporta globalmente
   window.btnprenota = btnprenota;

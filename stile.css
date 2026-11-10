@@ -581,3 +581,49 @@ h1 {
   .btn-settima { display: none; }
   .settima-desktop { display: none; }
 }
+
+/* ---------- ORARIO NON DEFINITIVO / INFO / FASCIA ---------- */
+.badge-provvisoria {
+  background: rgba(217, 119, 6, 0.14);
+  color: var(--ambra);
+  border: 1px solid rgba(217, 119, 6, 0.4);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.tab-btn.provvisoria { position: relative; }
+.tab-btn.provvisoria::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ambra);
+}
+
+.info-orario,
+.avviso-fascia {
+  width: 92%;
+  max-width: 980px;
+  margin: -1.25rem auto 1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.avviso-fascia { margin-top: 0; margin-bottom: 1.5rem; }
+.avviso-fascia.chiuso { color: var(--ambra); font-weight: 600; }
+
+.btn-aggiungi:disabled,
+.btn-aggiungi:disabled:hover {
+  opacity: 0.2;
+  cursor: not-allowed;
+  background: transparent;
+  border-color: var(--border-strong);
+  box-shadow: none;
+}

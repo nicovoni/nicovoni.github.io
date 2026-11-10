@@ -156,6 +156,27 @@
       margin-bottom: 2.5rem;
     }
 
+    /* ---------- AVVISO ORARIO PROVVISORIO ---------- */
+    .avviso-orario {
+      max-width: 960px;
+      width: calc(100% - 4rem);
+      margin: 0 auto 1.5rem;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 18px;
+      background: rgba(217, 119, 6, 0.12);
+      border: 1px solid rgba(217, 119, 6, 0.4);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .avviso-orario > i { color: #d97706; font-size: 20px; margin-top: 2px; }
+    .avviso-orario strong { font-weight: 700; }
+    .avviso-orario p + p { margin-top: 6px; }
+    @media (max-width: 600px) { .avviso-orario { width: calc(100% - 2.5rem); } }
+
     /* ---------- CARD GRID ---------- */
     .cards-grid {
       display: grid;
@@ -316,6 +337,14 @@
     <h1>Laboratori e dispositivi</h1>
     <p>Prenota il laboratorio multimediale, i carrelli iPad e notebook del Liceo di Follonica. Verifica la disponibilità in tempo reale.</p>
   </section>
+
+  <div class="avviso-orario" role="note">
+    <i class="fas fa-triangle-exclamation"></i>
+    <div>
+      <p><strong>Orario delle lezioni provvisorio.</strong> L'orario viene aggiornato ogni settimana e il nuovo orario può uscire il venerdì, il sabato o anche la domenica. Quando esce, <strong>verifica le tue prenotazioni</strong> basate sul vecchio orario.</p>
+      <p>Si può prenotare dalle 07:30 alle 17:30, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</p>
+    </div>
+  </div>
 
   <div class="cards-grid">
 
