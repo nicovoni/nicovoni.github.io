@@ -8,132 +8,131 @@
 <title>Prenotazioni | Liceo di Follonica</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" type="text/css" href="stile.css">
 <style>
-:root {
-  --bg: #f2f5f9;
-  --surface: #ffffff;
-  --ink: #12203a;
-  --ink-soft: #4a5873;
-  --line: #d9e0ea;
-  --brand: #1747b8;
-  --brand-ink: #ffffff;
-  --open: #14794a;
-  --open-bg: #e3f4ea;
-  --closed: #a8381f;
-  --closed-bg: #fbe9e4;
-  --warn-bg: #fff4d6;
-  --warn-line: #e9c867;
-  --warn-ink: #5d4500;
-  --shadow: 0 1px 2px rgba(18, 32, 58, .06), 0 8px 24px rgba(18, 32, 58, .06);
-  color-scheme: light dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0d1424;
-    --surface: #151e33;
-    --ink: #e8edf7;
-    --ink-soft: #a5b1c9;
-    --line: #26324d;
-    --brand: #7fa4ff;
-    --brand-ink: #0d1424;
-    --open: #5fd69a;
-    --open-bg: #12301f;
-    --closed: #ff9a85;
-    --closed-bg: #3a1a14;
-    --warn-bg: #2d2610;
-    --warn-line: #6b5619;
-    --warn-ink: #f1d98a;
-    --shadow: none;
-  }
-}
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.55;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.wrap { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 20px; }
+/* Solo componenti specifici della home. Colori, font, raggi e ombre
+   arrivano tutti dalle variabili di stile.css (dark mode inclusa). */
 
-/* Header */
-.top { background: var(--surface); border-bottom: 1px solid var(--line); }
-.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
-.brand { font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
-.year { color: var(--ink-soft); font-size: .9rem; }
+.home { width: 92%; max-width: 980px; margin: 0 auto; }
 
-/* Hero */
-.hero { padding: 40px 0 8px; display: grid; gap: 28px; grid-template-columns: 1.2fr 1fr; align-items: stretch; }
-h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; margin: 0 0 14px; font-weight: 800; }
-.lead { color: var(--ink-soft); font-size: 1.08rem; max-width: 46ch; margin: 0; }
+.site-header .anno { font-size: 13px; font-weight: 500; color: var(--text-muted); }
 
-/* Pannello stato: l'elemento centrale della pagina */
-.status {
-  border-radius: 20px;
-  padding: 22px 24px;
-  border: 1.5px solid currentColor;
-  display: flex; flex-direction: column; justify-content: center; gap: 4px;
+/* ---------- Pannello stato prenotazioni ---------- */
+.stato {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  text-align: center;
+  padding: 1.5rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  box-shadow: var(--shadow);
 }
-body[data-state="open"] .status { color: var(--open); background: var(--open-bg); }
-body[data-state="closed"] .status { color: var(--closed); background: var(--closed-bg); }
-body[data-state="checking"] .status { color: var(--ink-soft); background: var(--surface); border-color: var(--line); }
-.status-label { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
-.dot { width: 11px; height: 11px; border-radius: 50%; background: currentColor; flex: none; }
+body[data-state="open"] .stato   { color: var(--success); background: var(--success-light); border-color: var(--success); }
+body[data-state="closed"] .stato { color: var(--accent);  background: var(--accent-light);  border-color: var(--accent); }
+
+.stato-label { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; flex: none; }
 body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(20,121,74,.45); } 50% { box-shadow: 0 0 0 7px rgba(20,121,74,0); } }
-.countdown { font-size: clamp(2.2rem, 7vw, 3.1rem); font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ink); }
-.status-note { font-size: .95rem; color: var(--ink-soft); margin: 0; }
-
-/* Avvisi */
-.notices { display: grid; gap: 12px; margin: 28px 0 8px; }
-.notice { border-radius: 14px; padding: 14px 18px; font-size: .97rem; display: flex; gap: 12px; align-items: flex-start; }
-.notice svg { flex: none; margin-top: 2px; }
-.notice.warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: var(--warn-ink); }
-.notice.info { background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
-.notice strong { color: inherit; font-weight: 700; }
-
-/* Card */
-.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 48px; }
-.card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
-  padding: 24px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(14, 159, 110, .45); }
+  50%      { box-shadow: 0 0 0 7px rgba(14, 159, 110, 0); }
 }
-.card.primary { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 28px; border: 1.5px solid var(--brand); }
-.card h2 { margin: 0; font-size: 1.3rem; letter-spacing: -.02em; }
-.card p { margin: 0; color: var(--ink-soft); }
-.card .icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--bg); color: var(--brand); margin-bottom: 4px; }
-.card .body { display: flex; flex-direction: column; gap: 8px; max-width: 52ch; }
+.countdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  color: var(--text);
+}
+.stato-nota { font-size: 0.85rem; color: var(--text-muted); }
 
+/* ---------- Avvisi ---------- */
+.avvisi { display: grid; gap: 10px; margin-bottom: 1.5rem; }
+.avviso {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.avviso i { flex: none; margin-top: 3px; color: var(--primary); }
+.avviso.attenzione {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: rgba(217, 119, 6, 0.4);
+  color: var(--text);
+}
+.avviso.attenzione i { color: var(--ambra); }
+.avviso strong { color: var(--text); font-weight: 600; }
+
+/* ---------- Card servizi ---------- */
+.servizi { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+.servizio {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 1.5rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.servizio h2 { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+.servizio p { color: var(--text-muted); font-size: 0.9rem; }
+.servizio .icona {
+  width: 42px; height: 42px; border-radius: var(--radius-sm);
+  display: grid; place-items: center;
+  background: var(--primary-light); color: var(--primary);
+  font-size: 18px; margin-bottom: 4px;
+}
+.servizio.principale {
+  grid-column: 1 / -1;
+  flex-direction: row; align-items: center; justify-content: space-between; gap: 24px;
+  border: 2px solid var(--current-week-border);
+  box-shadow: 0 0 0 4px rgba(26, 86, 219, 0.08), var(--shadow);
+}
+.servizio .corpo { display: flex; flex-direction: column; gap: 8px; max-width: 54ch; }
+.servizio .nota { font-size: 0.82rem; }
+
+/* ---------- Pulsanti ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font: inherit; font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer;
-  padding: 13px 22px; border-radius: 12px; border: 1.5px solid var(--brand);
-  background: var(--brand); color: var(--brand-ink); white-space: nowrap;
-  transition: transform .12s ease, filter .12s ease;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--primary);
+  background: var(--primary); color: #fff;
+  font: inherit; font-size: 0.9rem; font-weight: 600;
+  white-space: nowrap; cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.1s;
 }
-.btn:hover { filter: brightness(1.08); }
-.btn:active { transform: translateY(1px); }
-.btn.ghost { background: transparent; color: var(--brand); margin-top: auto; align-self: flex-start; }
-.btn.ghost:hover { background: var(--bg); filter: none; }
-.btn[aria-disabled="true"] {
-  background: var(--bg); color: var(--ink-soft); border-color: var(--line);
-  cursor: not-allowed; filter: none; transform: none;
+.btn:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+.btn:active { transform: scale(0.98); }
+.btn.secondario {
+  background: transparent; color: var(--primary);
+  margin-top: auto; align-self: flex-start;
 }
-:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; border-radius: 8px; }
+.btn.secondario:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.btn[aria-disabled="true"],
+.btn[aria-disabled="true"]:hover {
+  background: var(--bg); color: var(--text-muted); border-color: var(--border-strong);
+  cursor: not-allowed; transform: none;
+}
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.25); }
 
-footer { margin-top: auto; border-top: 1px solid var(--line); background: var(--surface); }
-footer .wrap { padding-top: 18px; padding-bottom: 18px; color: var(--ink-soft); font-size: .88rem; }
+/* ---------- Piè di pagina ---------- */
+.piede { text-align: center; font-size: 0.82rem; color: var(--text-muted); padding: 0 1rem; }
 
-@media (max-width: 720px) {
-  .hero { grid-template-columns: 1fr; padding-top: 28px; }
-  .cards { grid-template-columns: 1fr; }
-  .card.primary { flex-direction: column; align-items: stretch; }
-  .card.primary .btn { width: 100%; }
+@media (max-width: 768px) {
+  .servizi { grid-template-columns: 1fr; }
+  .servizio.principale { flex-direction: column; align-items: stretch; }
+  .servizio.principale .btn { width: 100%; }
+  .stato { padding: 1.25rem 1rem; }
+  .home { width: calc(100% - 2rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   .dot { animation: none !important; }
@@ -143,72 +142,65 @@ footer .wrap { padding-top: 18px; padding-bottom: 18px; color: var(--ink-soft); 
 </head>
 <body data-state="checking">
 
-<header class="top">
-  <div class="wrap">
-    <a class="brand" href="#">Liceo di Follonica</a>
-    <span class="year" id="schoolYear">a.s. 2026/2027</span>
-  </div>
+<header class="site-header">
+  <a href="https://nicovoni.github.io/" class="logo"><i class="fas fa-school"></i><span>Liceo di Follonica</span></a>
+  <span class="anno" id="schoolYear">a.s. 2026/2027</span>
 </header>
 
-<main class="wrap">
-  <section class="hero" aria-labelledby="titolo">
-    <div>
-      <h1 id="titolo">Laboratori e dispositivi</h1>
-      <p class="lead">Prenota il laboratorio multimediale, i carrelli iPad e notebook. Controlla la disponibilità in tempo reale prima di compilare il modulo.</p>
-    </div>
+<h1 id="titolo">Laboratori e dispositivi</h1>
+<p class="page-subtitle">Prenota il laboratorio multimediale e i carrelli iPad e notebook. Controlla la disponibilità prima di compilare il modulo.</p>
 
-    <div class="status" role="status" aria-live="polite">
-      <div class="status-label"><span class="dot" aria-hidden="true"></span><span id="statusText">Verifica dell’orario in corso…</span></div>
-      <div class="countdown" id="countdown" aria-hidden="true">--:--:--</div>
-      <p class="status-note" id="statusNote">Orario di riferimento: Italia (Europe/Rome)</p>
-    </div>
-  </section>
+<main class="home">
 
-  <section class="notices" aria-label="Avvisi">
-    <div class="notice warn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+  <div class="stato" role="status" aria-live="polite">
+    <div class="stato-label"><span class="dot" aria-hidden="true"></span><span id="statusText">Verifica dell’orario in corso…</span></div>
+    <div class="countdown" id="countdown" aria-hidden="true">--:--:--</div>
+    <p class="stato-nota" id="statusNote">Orario di riferimento: Italia (Europe/Rome)</p>
+  </div>
+
+  <section class="avvisi" aria-label="Avvisi">
+    <div class="avviso attenzione">
+      <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
       <div><strong>Orario delle lezioni provvisorio.</strong> L’orario viene aggiornato ogni settimana e il nuovo può uscire il venerdì, il sabato o anche la domenica. Quando esce, <strong>verifica le tue prenotazioni</strong> fatte sul vecchio orario.</div>
     </div>
-    <div class="notice info">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <div class="avviso">
+      <i class="fas fa-clock" aria-hidden="true"></i>
       <div>Si può prenotare ogni giorno <strong>dalle 07:30 alle 17:30</strong>, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</div>
     </div>
   </section>
 
-  <section class="cards" aria-label="Servizi">
-    <article class="card primary">
-      <div class="body">
-        <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M12 14v4M10 16h4"/></svg></div>
+  <section class="servizi" aria-label="Servizi">
+    <article class="servizio principale">
+      <div class="corpo">
+        <div class="icona" aria-hidden="true"><i class="fas fa-calendar-plus"></i></div>
         <h2>Nuova prenotazione</h2>
         <p>Compila il modulo per prenotare il laboratorio multimediale, il carrello iPad o il carrello notebook.</p>
-        <p id="bookingHint" style="font-size:.92rem"></p>
+        <p class="nota" id="bookingHint"></p>
       </div>
       <a class="btn" id="bookBtn" data-href="https://forms.gle/JuLfANsMMFMz1rCt7" role="link" aria-disabled="true">Verifica orario…</a>
     </article>
 
-    <article class="card">
-      <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+    <article class="servizio">
+      <div class="icona" aria-hidden="true"><i class="fas fa-desktop"></i></div>
       <h2>Disponibilità lab. multimediale</h2>
-      <p>Orario fisso e prenotazioni del laboratorio multimediale, aggiornati in tempo reale.</p>
-      <a class="btn ghost" href="https://nicovoni.github.io/labmulti.html">Visualizza disponibilità</a>
+      <p>Orario fisso e prenotazioni del laboratorio multimediale, aggiornati a ogni nuova prenotazione.</p>
+      <a class="btn secondario" href="https://nicovoni.github.io/labmulti.html">Vedi disponibilità</a>
     </article>
 
-    <article class="card">
-      <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+    <article class="servizio">
+      <div class="icona" aria-hidden="true"><i class="fas fa-calendar-days"></i></div>
       <h2>Calendario Aula Magna</h2>
       <p>Consulta il calendario delle prenotazioni dell’Aula Magna del Liceo.</p>
-      <a class="btn ghost" href="https://nicovoni.github.io/calendarioaml.html">Visualizza calendario</a>
+      <a class="btn secondario" href="https://nicovoni.github.io/calendarioaml.html">Vedi calendario</a>
     </article>
   </section>
 
   <noscript>
-    <div class="notice warn" style="margin-bottom:32px">Per verificare l’orario di prenotazione serve JavaScript. <a href="https://forms.gle/JuLfANsMMFMz1rCt7">Apri il modulo</a> solo tra le 07:30 e le 17:30.</div>
+    <div class="avviso attenzione" style="margin-bottom:2rem">Per verificare l’orario di prenotazione serve JavaScript. <a href="https://forms.gle/JuLfANsMMFMz1rCt7">Apri il modulo</a> solo tra le 07:30 e le 17:30.</div>
   </noscript>
 </main>
 
-<footer>
-  <div class="wrap">© <span id="copyYear">2026</span> Nicola Cantalupo — Liceo di Follonica. Tutti i diritti riservati.</div>
-</footer>
+<footer class="piede">© <span id="copyYear">2026</span> Nicola Cantalupo — Liceo di Follonica. Tutti i diritti riservati.</footer>
 
 <script>
 (function () {
