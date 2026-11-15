@@ -1,386 +1,300 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Prenota il laboratorio multimediale o informatico e i dispositivi iPad e notebook del Liceo di Follonica e visualizza l'orario fisso e le prenotazioni dei docenti" />
-  <meta name="author" content="Nicola Cantalupo" />
-  <title>Prenotazioni | Liceo di Follonica</title>
-  <link rel="icon" href="favicon.ico" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Nicola Cantalupo">
+<meta name="description" content="Prenota il laboratorio multimediale o informatico e i dispositivi iPad e notebook del Liceo di Follonica e visualizza l’orario fisso e le prenotazioni dei docenti">
+<title>Prenotazioni | Liceo di Follonica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f2f5f9;
+  --surface: #ffffff;
+  --ink: #12203a;
+  --ink-soft: #4a5873;
+  --line: #d9e0ea;
+  --brand: #1747b8;
+  --brand-ink: #ffffff;
+  --open: #14794a;
+  --open-bg: #e3f4ea;
+  --closed: #a8381f;
+  --closed-bg: #fbe9e4;
+  --warn-bg: #fff4d6;
+  --warn-line: #e9c867;
+  --warn-ink: #5d4500;
+  --shadow: 0 1px 2px rgba(18, 32, 58, .06), 0 8px 24px rgba(18, 32, 58, .06);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1424;
+    --surface: #151e33;
+    --ink: #e8edf7;
+    --ink-soft: #a5b1c9;
+    --line: #26324d;
+    --brand: #7fa4ff;
+    --brand-ink: #0d1424;
+    --open: #5fd69a;
+    --open-bg: #12301f;
+    --closed: #ff9a85;
+    --closed-bg: #3a1a14;
+    --warn-bg: #2d2610;
+    --warn-line: #6b5619;
+    --warn-ink: #f1d98a;
+    --shadow: none;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.wrap { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 20px; }
 
-    :root {
-      --primary: #1a56db;
-      --primary-hover: #1446b8;
-      --primary-light: #e8f0fe;
-      --primary-border: #bfdbfe;
-      --text: #111827;
-      --text-muted: #6b7280;
-      --text-light: #9ca3af;
-      --bg: #f3f4f6;
-      --bg-alt: #ffffff;
-      --border: #e5e7eb;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
+/* Header */
+.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
+.brand { font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+.year { color: var(--ink-soft); font-size: .9rem; }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary: #4f86f7;
-        --primary-hover: #3b6fd4;
-        --primary-light: #1e2d4a;
-        --primary-border: #2d4a7a;
-        --text: #f1f5f9;
-        --text-muted: #94a3b8;
-        --text-light: #64748b;
-        --bg: #0f172a;
-        --bg-alt: #1e293b;
-        --border: #334155;
-        --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-        --shadow: 0 4px 16px rgba(0,0,0,0.4);
-        --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-      }
-    }
+/* Hero */
+.hero { padding: 40px 0 8px; display: grid; gap: 28px; grid-template-columns: 1.2fr 1fr; align-items: stretch; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -.03em; margin: 0 0 14px; font-weight: 800; }
+.lead { color: var(--ink-soft); font-size: 1.08rem; max-width: 46ch; margin: 0; }
 
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* Pannello stato: l'elemento centrale della pagina */
+.status {
+  border-radius: 20px;
+  padding: 22px 24px;
+  border: 1.5px solid currentColor;
+  display: flex; flex-direction: column; justify-content: center; gap: 4px;
+}
+body[data-state="open"] .status { color: var(--open); background: var(--open-bg); }
+body[data-state="closed"] .status { color: var(--closed); background: var(--closed-bg); }
+body[data-state="checking"] .status { color: var(--ink-soft); background: var(--surface); border-color: var(--line); }
+.status-label { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+.dot { width: 11px; height: 11px; border-radius: 50%; background: currentColor; flex: none; }
+body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(20,121,74,.45); } 50% { box-shadow: 0 0 0 7px rgba(20,121,74,0); } }
+.countdown { font-size: clamp(2.2rem, 7vw, 3.1rem); font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; color: var(--ink); }
+.status-note { font-size: .95rem; color: var(--ink-soft); margin: 0; }
 
-    /* ---------- HEADER ---------- */
-    .site-header {
-      background: var(--bg-alt);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: var(--shadow-sm);
-    }
+/* Avvisi */
+.notices { display: grid; gap: 12px; margin: 28px 0 8px; }
+.notice { border-radius: 14px; padding: 14px 18px; font-size: .97rem; display: flex; gap: 12px; align-items: flex-start; }
+.notice svg { flex: none; margin-top: 2px; }
+.notice.warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: var(--warn-ink); }
+.notice.info { background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+.notice strong { color: inherit; font-weight: 700; }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--text);
-      text-decoration: none;
-    }
+/* Card */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 48px; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+  padding: 24px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card.primary { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 28px; border: 1.5px solid var(--brand); }
+.card h2 { margin: 0; font-size: 1.3rem; letter-spacing: -.02em; }
+.card p { margin: 0; color: var(--ink-soft); }
+.card .icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--bg); color: var(--brand); margin-bottom: 4px; }
+.card .body { display: flex; flex-direction: column; gap: 8px; max-width: 52ch; }
 
-    .logo i {
-      font-size: 18px;
-      color: var(--primary);
-    }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: inherit; font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer;
+  padding: 13px 22px; border-radius: 12px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: var(--brand-ink); white-space: nowrap;
+  transition: transform .12s ease, filter .12s ease;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); }
+.btn.ghost { background: transparent; color: var(--brand); margin-top: auto; align-self: flex-start; }
+.btn.ghost:hover { background: var(--bg); filter: none; }
+.btn[aria-disabled="true"] {
+  background: var(--bg); color: var(--ink-soft); border-color: var(--line);
+  cursor: not-allowed; filter: none; transform: none;
+}
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; border-radius: 8px; }
 
-    .header-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 4px 12px;
-    }
+footer { margin-top: auto; border-top: 1px solid var(--line); background: var(--surface); }
+footer .wrap { padding-top: 18px; padding-bottom: 18px; color: var(--ink-soft); font-size: .88rem; }
 
-    /* ---------- HERO ---------- */
-    .hero {
-      padding: 4rem 2rem 2rem;
-      text-align: center;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--primary);
-      background: var(--primary-light);
-      border: 1px solid var(--primary-border);
-      border-radius: 100px;
-      padding: 4px 14px;
-      margin-bottom: 20px;
-    }
-
-    .hero-eyebrow::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--primary);
-      display: inline-block;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    .hero h1 {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      font-size: 1rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-    }
-
-    /* ---------- AVVISO ORARIO PROVVISORIO ---------- */
-    .avviso-orario {
-      max-width: 960px;
-      width: calc(100% - 4rem);
-      margin: 0 auto 1.5rem;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 16px 18px;
-      background: rgba(217, 119, 6, 0.12);
-      border: 1px solid rgba(217, 119, 6, 0.4);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text);
-    }
-    .avviso-orario > i { color: #d97706; font-size: 20px; margin-top: 2px; }
-    .avviso-orario strong { font-weight: 700; }
-    .avviso-orario p + p { margin-top: 6px; }
-    @media (max-width: 600px) { .avviso-orario { width: calc(100% - 2.5rem); } }
-
-    /* ---------- CARD GRID ---------- */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 2rem 4rem;
-      width: 100%;
-    }
-
-    .card {
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--primary);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--primary-border);
-    }
-
-    .card:hover::after {
-      transform: scaleX(1);
-    }
-
-    .card-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--primary-light);
-      border: 1px solid var(--primary-border);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: var(--primary);
-      flex-shrink: 0;
-    }
-
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .card-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .card-arrow {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--primary);
-      margin-top: 4px;
-    }
-
-    .card-arrow i { font-size: 10px; transition: transform 0.18s; }
-    .card:hover .card-arrow i { transform: translateX(4px); }
-
-    /* Card prenotazione — evidenziata */
-    .card.featured {
-      border-color: var(--primary-border);
-      background: var(--primary-light);
-    }
-
-    .card.featured .card-title { color: var(--primary); }
-
-    /* ---------- FOOTER ---------- */
-    footer {
-      margin-top: auto;
-      text-align: center;
-      padding: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.8rem;
-      color: var(--text-light);
-    }
-
-    /* ---------- TOAST ---------- */
-    #toast {
-      position: fixed;
-      top: 72px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-12px);
-      background: var(--text);
-      color: var(--bg-alt);
-      padding: 0.65rem 1.25rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      font-weight: 500;
-      box-shadow: var(--shadow-lg);
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
-      white-space: nowrap;
-    }
-
-    #toast.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    @media (max-width: 600px) {
-      .hero { padding: 2.5rem 1.25rem 1.5rem; }
-      .cards-grid { padding: 0 1.25rem 3rem; gap: 12px; }
-      .site-header { padding: 0 1.25rem; }
-      .header-badge { display: none; }
-    }
-  </style>
+@media (max-width: 720px) {
+  .hero { grid-template-columns: 1fr; padding-top: 28px; }
+  .cards { grid-template-columns: 1fr; }
+  .card.primary { flex-direction: column; align-items: stretch; }
+  .card.primary .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none !important; }
+  .btn { transition: none; }
+}
+</style>
 </head>
-<body>
+<body data-state="checking">
 
-  <header class="site-header">
-    <a href="#" class="logo">
-      <i class="fas fa-school"></i>
-      <span>Liceo di Follonica</span>
-    </a>
-    <span class="header-badge">a.s. 2025/2026</span>
-  </header>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">Liceo di Follonica</a>
+    <span class="year" id="schoolYear">a.s. 2026/2027</span>
+  </div>
+</header>
 
-  <section class="hero">
-    <div class="hero-eyebrow">Prenotazioni online</div>
-    <h1>Laboratori e dispositivi</h1>
-    <p>Prenota il laboratorio multimediale, i carrelli iPad e notebook del Liceo di Follonica. Verifica la disponibilità in tempo reale.</p>
+<main class="wrap">
+  <section class="hero" aria-labelledby="titolo">
+    <div>
+      <h1 id="titolo">Laboratori e dispositivi</h1>
+      <p class="lead">Prenota il laboratorio multimediale, i carrelli iPad e notebook. Controlla la disponibilità in tempo reale prima di compilare il modulo.</p>
+    </div>
+
+    <div class="status" role="status" aria-live="polite">
+      <div class="status-label"><span class="dot" aria-hidden="true"></span><span id="statusText">Verifica dell’orario in corso…</span></div>
+      <div class="countdown" id="countdown" aria-hidden="true">--:--:--</div>
+      <p class="status-note" id="statusNote">Orario di riferimento: Italia (Europe/Rome)</p>
+    </div>
   </section>
 
-  <div class="avviso-orario" role="note">
-    <i class="fas fa-triangle-exclamation"></i>
-    <div>
-      <p><strong>Orario delle lezioni provvisorio.</strong> L'orario viene aggiornato ogni settimana e il nuovo orario può uscire il venerdì, il sabato o anche la domenica. Quando esce, <strong>verifica le tue prenotazioni</strong> basate sul vecchio orario.</p>
-      <p>Si può prenotare dalle 07:30 alle 17:30, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</p>
+  <section class="notices" aria-label="Avvisi">
+    <div class="notice warn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <div><strong>Orario delle lezioni provvisorio.</strong> L’orario viene aggiornato ogni settimana e il nuovo può uscire il venerdì, il sabato o anche la domenica. Quando esce, <strong>verifica le tue prenotazioni</strong> fatte sul vecchio orario.</div>
     </div>
-  </div>
+    <div class="notice info">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <div>Si può prenotare ogni giorno <strong>dalle 07:30 alle 17:30</strong>, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</div>
+    </div>
+  </section>
 
-  <div class="cards-grid">
+  <section class="cards" aria-label="Servizi">
+    <article class="card primary">
+      <div class="body">
+        <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M12 14v4M10 16h4"/></svg></div>
+        <h2>Nuova prenotazione</h2>
+        <p>Compila il modulo per prenotare il laboratorio multimediale, il carrello iPad o il carrello notebook.</p>
+        <p id="bookingHint" style="font-size:.92rem"></p>
+      </div>
+      <a class="btn" id="bookBtn" data-href="https://forms.gle/JuLfANsMMFMz1rCt7" role="link" aria-disabled="true">Verifica orario…</a>
+    </article>
 
-    <a href="https://forms.gle/JuLfANsMMFMz1rCt7" class="card featured">
-      <div class="card-icon"><i class="fas fa-calendar-plus"></i></div>
-      <div class="card-title">Nuova prenotazione</div>
-      <div class="card-desc">Compila il modulo per prenotare il laboratorio multimediale, il carrello iPad o il carrello notebook.</div>
-      <div class="card-arrow">Vai al modulo <i class="fas fa-arrow-right"></i></div>
-    </a>
+    <article class="card">
+      <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <h2>Disponibilità lab. multimediale</h2>
+      <p>Orario fisso e prenotazioni del laboratorio multimediale, aggiornati in tempo reale.</p>
+      <a class="btn ghost" href="https://nicovoni.github.io/labmulti.html">Visualizza disponibilità</a>
+    </article>
 
-    <a href="labmulti.html" class="card">
-      <div class="card-icon"><i class="fas fa-desktop"></i></div>
-      <div class="card-title">Disponibilità Lab. multimediale</div>
-      <div class="card-desc">Visualizza l'orario fisso e le prenotazioni del laboratorio multimediale aggiornate in tempo reale.</div>
-      <div class="card-arrow">Visualizza <i class="fas fa-arrow-right"></i></div>
-    </a>
+    <article class="card">
+      <div class="icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+      <h2>Calendario Aula Magna</h2>
+      <p>Consulta il calendario delle prenotazioni dell’Aula Magna del Liceo.</p>
+      <a class="btn ghost" href="https://nicovoni.github.io/calendarioaml.html">Visualizza calendario</a>
+    </article>
+  </section>
 
-    <a href="calendarioaml.html" class="card">
-      <div class="card-icon"><i class="fas fa-chalkboard"></i></div>
-      <div class="card-title">Calendario Aula Magna</div>
-      <div class="card-desc">Consulta il calendario delle prenotazioni dell'Aula Magna del Liceo.</div>
-      <div class="card-arrow">Visualizza <i class="fas fa-arrow-right"></i></div>
-    </a>
+  <noscript>
+    <div class="notice warn" style="margin-bottom:32px">Per verificare l’orario di prenotazione serve JavaScript. <a href="https://forms.gle/JuLfANsMMFMz1rCt7">Apri il modulo</a> solo tra le 07:30 e le 17:30.</div>
+  </noscript>
+</main>
 
-    <!-- <a href="2hedcivica2.seb" class="card">
-      <div class="card-icon"><i class="fas fa-file"></i></div>
-      <div class="card-title">2H - Ed Civica 2</div>
-      <div class="card-desc"></div>
-      <div class="card-arrow">Apri <i class="fas fa-arrow-right"></i></div>
-    </a> -->
+<footer>
+  <div class="wrap">© <span id="copyYear">2026</span> Nicola Cantalupo — Liceo di Follonica. Tutti i diritti riservati.</div>
+</footer>
 
-  </div>
+<script>
+(function () {
+  var OPEN_MIN = 7 * 60 + 30;   // 07:30
+  var CLOSE_MIN = 17 * 60 + 30; // 17:30 (da quest'ora in poi è chiuso)
+  var TZ = 'Europe/Rome';
 
-  <footer>© 2025 Nicola Cantalupo — Liceo di Follonica. Tutti i diritti riservati.</footer>
+  var fmt = new Intl.DateTimeFormat('en-GB', {
+    timeZone: TZ, hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+  });
 
-  <div id="toast"></div>
+  var body = document.body;
+  var btn = document.getElementById('bookBtn');
+  var statusText = document.getElementById('statusText');
+  var statusNote = document.getElementById('statusNote');
+  var countdown = document.getElementById('countdown');
+  var hint = document.getElementById('bookingHint');
+  var href = btn.getAttribute('data-href');
+  var lastState = null;
 
+  function romeSeconds() {
+    var parts = fmt.formatToParts(new Date());
+    var h = 0, m = 0, s = 0;
+    parts.forEach(function (p) {
+      if (p.type === 'hour') h = parseInt(p.value, 10);
+      if (p.type === 'minute') m = parseInt(p.value, 10);
+      if (p.type === 'second') s = parseInt(p.value, 10);
+    });
+    return h * 3600 + m * 60 + s;
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function hms(total) {
+    var h = Math.floor(total / 3600), m = Math.floor((total % 3600) / 60), s = total % 60;
+    return pad(h) + ':' + pad(m) + ':' + pad(s);
+  }
+
+  function setState(open) {
+    var state = open ? 'open' : 'closed';
+    if (state === lastState) return;
+    lastState = state;
+    body.setAttribute('data-state', state);
+    if (open) {
+      statusText.textContent = 'Prenotazioni aperte';
+      btn.textContent = 'Vai al modulo';
+      btn.setAttribute('href', href);
+      btn.setAttribute('aria-disabled', 'false');
+      btn.removeAttribute('role');
+      hint.textContent = 'Il modulo è disponibile fino alle 17:30.';
+    } else {
+      statusText.textContent = 'Prenotazioni chiuse';
+      btn.textContent = 'Riapre alle 07:30';
+      btn.removeAttribute('href');
+      btn.setAttribute('role', 'link');
+      btn.setAttribute('aria-disabled', 'true');
+      hint.textContent = 'Il modulo si può usare solo dalle 07:30 alle 17:30, tutti i giorni.';
+    }
+  }
+
+  function tick() {
+    var now = romeSeconds();
+    var open = now >= OPEN_MIN * 60 && now < CLOSE_MIN * 60;
+    setState(open);
+    var remaining;
+    if (open) {
+      remaining = CLOSE_MIN * 60 - now;
+      statusNote.textContent = 'alla chiusura delle prenotazioni (17:30)';
+    } else {
+      remaining = now < OPEN_MIN * 60 ? OPEN_MIN * 60 - now : 86400 - now + OPEN_MIN * 60;
+      statusNote.textContent = 'alla riapertura delle prenotazioni (07:30)';
+    }
+    countdown.textContent = hms(remaining);
+  }
+
+  btn.addEventListener('click', function (e) {
+    if (btn.getAttribute('aria-disabled') === 'true') e.preventDefault();
+  });
+
+  // Anno scolastico e copyright dinamici (l'anno scolastico cambia da settembre)
+  var d = new Date(), y = d.getFullYear(), start = d.getMonth() >= 8 ? y : y - 1;
+  document.getElementById('schoolYear').textContent = 'a.s. ' + start + '/' + (start + 1);
+  document.getElementById('copyYear').textContent = y;
+
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 </body>
 </html>
