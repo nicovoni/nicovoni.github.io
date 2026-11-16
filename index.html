@@ -73,7 +73,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
 .avviso strong { color: var(--text); font-weight: 600; }
 
 /* ---------- Card servizi ---------- */
-.servizi { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+.servizi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 2rem; }
 .servizio {
   display: flex; flex-direction: column; gap: 8px;
   padding: 1.5rem;
@@ -127,8 +127,10 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
 /* ---------- Piè di pagina ---------- */
 .piede { text-align: center; font-size: 0.82rem; color: var(--text-muted); padding: 0 1rem; }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .servizi { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
   .servizio.principale { flex-direction: column; align-items: stretch; }
   .servizio.principale .btn { width: 100%; }
   .stato { padding: 1.25rem 1rem; }
@@ -185,6 +187,13 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
       <h2>Disponibilità lab. multimediale</h2>
       <p>Orario fisso e prenotazioni del laboratorio multimediale, aggiornati a ogni nuova prenotazione.</p>
       <a class="btn secondario" href="https://nicovoni.github.io/labmulti.html">Vedi disponibilità</a>
+    </article>
+
+    <article class="servizio">
+      <div class="icona" aria-hidden="true"><i class="fas fa-list-check"></i></div>
+      <h2>Le mie prenotazioni</h2>
+      <p>Vedi le tue prenotazioni future e annullale se non ti servono più. Accedi con l’account istituzionale.</p>
+      <a class="btn secondario" href="https://script.google.com/a/macros/isufol.it/s/AKfycbzN1P6AhCc0j47KShHcBnYooPegm2fA0zNbeSXUQymm_7Gv6Kc_blcoh5AZEJf6uO8M/exec?pagina=mieprenotazioni">Apri le mie prenotazioni</a>
     </article>
 
     <article class="servizio">

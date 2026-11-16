@@ -546,7 +546,7 @@ h1 {
     gap: 2px;
     position: absolute;
     left: calc(100% + 6px);
-    width: 78px;               /* top e height li imposta btnscript.js */
+    width: calc(100% / 7);     /* top, height e width esatta li imposta btnscript.js */
     padding: 0.3rem 0.4rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -571,9 +571,9 @@ h1 {
   }
 }
 
-/* Schermi medi: lascia spazio a destra per la cella della 7ª ora */
-@media (min-width: 769px) and (max-width: 1160px) {
-  .settimana-wrapper { width: calc(100% - 130px); margin-left: 24px; margin-right: 0; }
+/* Schermi medi: tabella + cella della 7ª ora (1/7 della tabella) devono stare nella finestra */
+@media (min-width: 769px) and (max-width: 1271px) {
+  .settimana-wrapper { width: calc((100% - 46px) * 7 / 8); max-width: 980px; margin-left: 24px; margin-right: 0; }
 }
 
 /* MOBILE: nessuna freccia, la 7ª ora è una normale riga della card */
@@ -627,3 +627,70 @@ h1 {
   border-color: var(--border-strong);
   box-shadow: none;
 }
+
+/* ---------- STATO DELLE SETTIMANE (deciso da btnscript.js in base all'orologio) ---------- */
+.settimana-wrapper.nascosta,
+.tab-btn.nascosta { display: none !important; }
+
+/* Etichetta senza badge: nessuno spazio vuoto */
+.settimana-label:empty { display: none; }
+
+.badge-prossima {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+.badge-passata {
+  background: var(--bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+}
+
+/* Settimana passata: attenuata e senza pulsanti "+" */
+.settimana-wrapper.passata .container,
+.settimana-wrapper.passata .settima-desktop { opacity: 0.55; }
+.settimana-wrapper.passata .btn-aggiungi { display: none; }
+.tab-btn.passata { opacity: 0.6; }
+
+/* ---------- LEGENDA ---------- */
+.legenda {
+  width: 92%;
+  max-width: 980px;
+  margin: -0.5rem auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.leg { display: inline-flex; align-items: center; gap: 7px; }
+.leg-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  display: inline-grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.leg-libero { background: var(--bg-alt); }
+.leg-prenotato { background: var(--success-light); border-color: var(--success); }
+.leg-fisso { background: var(--bg); }
+.leg-dada { background: var(--accent-light); border-color: var(--accent); }
