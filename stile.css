@@ -266,12 +266,6 @@ h1 {
   font-style: normal;
 }
 
-/* Priorità: prenotato su dada */
-.spazioprenotato.dada {
-  background: var(--success-light) !important;
-  color: var(--success);
-}
-
 /* ---------- PULSANTE "+" ---------- */
 .btn-aggiungi {
   width: 28px;
