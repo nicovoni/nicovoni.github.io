@@ -255,30 +255,124 @@
     return '';
   }
 
-  // Etichette "orario non definitivo", pulsanti attivi/disattivi, avviso fascia
-  function aggiornaStato() {
-    var validoFino = document.body.getAttribute('data-valido-fino') || '';
+  // ---------------------------------------------------------------------------
+  // SETTIMANE: stato in base all'orologio di Roma
+  //   corrente : dalle 08:00 del lunedì alla fine della 6ª ora del venerdì (13:40)
+  //   passata  : dalla fine della 6ª ora del venerdì alle 08:00 del lunedì successivo, poi sparisce
+  //   prossima : la settimana subito dopo la corrente (o dopo la passata nel weekend)
+  // Si mostrano la passata (se c'è) e 3 settimane prenotabili.
+  // ---------------------------------------------------------------------------
+  var INIZIO_SETTIMANA = '08:00';
+  var FINE_SETTIMANA = '13:40';
+  var SETTIMANE_PRENOTABILI = 3;
 
-    document.querySelectorAll('.settimana-wrapper').forEach(function (w, idx) {
+  var fmtRoma = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+  });
+
+  // "2026-11-15T10:20" (ora di Roma): si confronta come testo
+  function adessoRoma() {
+    var o = {};
+    fmtRoma.formatToParts(new Date()).forEach(function (p) { o[p.type] = p.value; });
+    return o.year + '-' + o.month + '-' + o.day + 'T' + o.hour + ':' + o.minute;
+  }
+
+  function isoPiuGiorni(iso, n) {
+    var p = iso.split('-');
+    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n));
+    return d.getUTCFullYear() + '-' + pad2(d.getUTCMonth() + 1) + '-' + pad2(d.getUTCDate());
+  }
+
+  function statoSettimana(w, adesso) {
+    var lun = w.getAttribute('data-lunedi');
+    var ven = w.getAttribute('data-venerdi');
+    if (!lun || !ven) return 'futura';
+    if (adesso >= isoPiuGiorni(lun, 7) + 'T' + INIZIO_SETTIMANA) return 'nascosta';
+    if (adesso >= ven + 'T' + FINE_SETTIMANA) return 'passata';
+    if (adesso >= lun + 'T' + INIZIO_SETTIMANA) return 'corrente';
+    return 'futura';
+  }
+
+  function creaBadge(classe, testo) {
+    var b = document.createElement('span');
+    b.className = classe;
+    b.textContent = testo;
+    return b;
+  }
+
+  function aggiornaSettimane() {
+    var adesso = adessoRoma();
+    var validoFino = document.body.getAttribute('data-valido-fino') || '';
+    var prenotabiliViste = 0;
+    var prossimaAssegnata = false;
+    var daMostrareDiDefault = null;
+
+    document.querySelectorAll('.settimana-wrapper').forEach(function (w) {
+      var num = w.id.replace('settimana-', '');
+      var tab = document.getElementById('tab-' + num);
+      var stato = statoSettimana(w, adesso);
+      var mostra = stato !== 'nascosta';
+
+      if (mostra && stato !== 'passata') {
+        if (prenotabiliViste >= SETTIMANE_PRENOTABILI) mostra = false;
+        else prenotabiliViste++;
+      }
+      if (mostra && stato === 'futura' && !prossimaAssegnata) {
+        stato = 'prossima';
+        prossimaAssegnata = true;
+      }
+
+      // Se manca la data di validità, le settimane non passate risultano non definitive (caso sicuro)
       var ven = w.getAttribute('data-venerdi') || '';
-      // Se manca la data di validità, tutte le settimane risultano non definitive (caso sicuro)
-      var prov = !validoFino || ven > validoFino;
+      var prov = mostra && stato !== 'passata' && (!validoFino || ven > validoFino);
+
+      w.classList.toggle('nascosta', !mostra);
+      w.classList.toggle('passata', stato === 'passata');
       w.classList.toggle('provvisoria', prov);
 
-      var tab = document.getElementById('tab-' + (idx + 1));
-      if (tab) tab.classList.toggle('provvisoria', prov);
+      var tabella = w.querySelector('table.container');
+      if (tabella) tabella.classList.toggle('settimana-corrente', stato === 'corrente');
 
-      var label = w.querySelector('.settimana-label');
-      var badge = label ? label.querySelector('.badge-provvisoria') : null;
-      if (prov && label && !badge) {
-        badge = document.createElement('span');
-        badge.className = 'badge-provvisoria';
-        badge.textContent = 'Orario non definitivo';
-        label.appendChild(badge);
-      } else if (!prov && badge) {
-        badge.remove();
+      if (tab) {
+        tab.classList.toggle('nascosta', !mostra);
+        tab.classList.toggle('passata', stato === 'passata');
+        tab.classList.toggle('corrente', stato === 'corrente');
+        tab.classList.toggle('provvisoria', prov);
+      }
+
+      // Badge: si ricostruiscono solo se lo stato è cambiato
+      var chiave = stato + '|' + prov + '|' + mostra;
+      if (w.getAttribute('data-chiave') !== chiave) {
+        w.setAttribute('data-chiave', chiave);
+        var label = w.querySelector('.settimana-label');
+        if (label) {
+          label.textContent = '';
+          label.classList.toggle('corrente', stato === 'corrente');
+          if (stato === 'corrente') label.appendChild(creaBadge('badge-corrente', 'Settimana corrente'));
+          if (stato === 'prossima') label.appendChild(creaBadge('badge-prossima', 'Prossima settimana'));
+          if (stato === 'passata')  label.appendChild(creaBadge('badge-passata', 'Settimana passata'));
+          if (prov) label.appendChild(creaBadge('badge-provvisoria', 'Orario non definitivo'));
+        }
+      }
+
+      // Scheda mobile iniziale: la corrente, altrimenti la prossima
+      if (mostra && (stato === 'corrente' || (stato === 'prossima' && daMostrareDiDefault === null))) {
+        daMostrareDiDefault = num;
       }
     });
+
+    // Su mobile: se nessuna scheda è attiva (primo caricamento) o la scheda attiva è sparita, si sceglie quella giusta
+    var attiva = document.querySelector('.settimana-wrapper.tab-attiva');
+    if ((!attiva || attiva.classList.contains('nascosta')) && daMostrareDiDefault !== null) {
+      mostraTab(daMostrareDiDefault);
+    }
+    document.body.classList.add('pronta');
+  }
+
+  // Pulsanti attivi/disattivi, avviso fascia
+  function aggiornaStato() {
+    aggiornaSettimane();
 
     document.querySelectorAll('.btn-aggiungi').forEach(function (b) {
       var data = b.parentNode ? b.parentNode.getAttribute('slotdata') : null;
@@ -292,7 +386,7 @@
   }
 
   aggiornaStato();
-  setInterval(aggiornaStato, 60000);
+  setInterval(aggiornaStato, 30000);
 
   // Esporta globalmente
   window.btnprenota = btnprenota;
@@ -303,12 +397,8 @@
 // Gestione tab mobile per navigazione tra settimane
 // ---------------------------------------------------------------------------
 function mostraTab(numero) {
-  for (var i = 1; i <= 5; i++) {
-    var wrapper = document.getElementById('settimana-' + i);
-    var tab     = document.getElementById('tab-' + i);
-    if (wrapper) wrapper.classList.remove('tab-attiva');
-    if (tab)     tab.classList.remove('attiva');
-  }
+  document.querySelectorAll('.settimana-wrapper').forEach(function (w) { w.classList.remove('tab-attiva'); });
+  document.querySelectorAll('.tab-btn').forEach(function (t) { t.classList.remove('attiva'); });
   var target    = document.getElementById('settimana-' + numero);
   var tabAttiva = document.getElementById('tab-' + numero);
   if (target)    target.classList.add('tab-attiva');
@@ -497,6 +587,7 @@ function posizionaSettima(cella) {
   if (!window.matchMedia('(min-width: 769px)').matches || !cella.classList.contains('aperta')) {
     cella.style.top = '';
     cella.style.height = '';
+    cella.style.width = '';
     return;
   }
 
@@ -507,8 +598,11 @@ function posizionaSettima(cella) {
 
   var r = riga.getBoundingClientRect();
   var w = wrapper.getBoundingClientRect();
+  // Stessa larghezza e altezza delle altre celle della riga (la cella della 6ª ora fa da modello)
+  var cellaOra = btn.closest('td');
   cella.style.top    = (r.top - w.top) + 'px';
   cella.style.height = r.height + 'px';
+  if (cellaOra) cella.style.width = cellaOra.getBoundingClientRect().width + 'px';
 }
 
 window.addEventListener('resize', function () {
