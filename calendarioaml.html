@@ -1,1 +1,108 @@
-<iframe src="https://calendar.google.com/calendar/embed?height=720&wkst=2&ctz=Europe%2FRome&showPrint=0&showTz=0&showCalendars=0&showTabs=0&showTitle=0&mode=MONTH&src=Y19mMDZkYmRiMmFlNjc1ODQxZGI1NTdkZDFhYTBmZTUyMmVmNDcyNzY5YzY5OGUzNzliZmM3MDczYTk4MjgxYjEyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23d50000" style="border-width:0" width="1280" height="720" frameborder="0" scrolling="no"></iframe>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Nicola Cantalupo">
+<meta name="description" content="Calendario delle prenotazioni dell’Aula Magna del Liceo di Follonica">
+<title>Calendario Aula Magna | Liceo di Follonica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" type="text/css" href="stile.css">
+<style>
+/* Solo componenti specifici di questa pagina: tutto il resto arriva da stile.css */
+.calendario { width: 92%; max-width: 980px; margin: 0 auto; }
+
+.calendario-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0.5rem;
+}
+.calendario-card iframe {
+  display: block;
+  width: 100%;
+  height: clamp(520px, 78vh, 760px);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: #ffffff;   /* il calendario Google non ha tema scuro */
+}
+
+.calendario-azioni { display: flex; justify-content: center; margin-top: 1rem; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--primary);
+  background: transparent; color: var(--primary);
+  font: inherit; font-size: 0.9rem; font-weight: 600;
+  white-space: nowrap; cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.1s;
+}
+.btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.btn:active { transform: scale(0.98); }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.25); }
+
+@media (max-width: 768px) {
+  .calendario { width: calc(100% - 1.5rem); }
+  .calendario-card iframe { height: clamp(480px, 75vh, 640px); }
+  .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="https://nicovoni.github.io/" class="logo"><i class="fas fa-school"></i><span>Liceo di Follonica</span></a>
+  <a href="https://nicovoni.github.io/" class="btn-home"><i class="fas fa-house"></i> Home</a>
+</header>
+
+<h1>Calendario Aula Magna</h1>
+<p class="page-subtitle">Prenotazioni dell’Aula Magna del Liceo</p>
+
+<main class="calendario">
+  <div class="calendario-card">
+    <iframe id="calendario" title="Calendario delle prenotazioni dell’Aula Magna"></iframe>
+    <noscript>
+      <iframe title="Calendario delle prenotazioni dell’Aula Magna"
+        src="https://calendar.google.com/calendar/embed?height=720&amp;wkst=2&amp;ctz=Europe%2FRome&amp;showPrint=0&amp;showTz=0&amp;showCalendars=0&amp;showTabs=0&amp;showTitle=0&amp;mode=MONTH&amp;src=Y19mMDZkYmRiMmFlNjc1ODQxZGI1NTdkZDFhYTBmZTUyMmVmNDcyNzY5YzY5OGUzNzliZmM3MDczYTk4MjgxYjEyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%23d50000"></iframe>
+    </noscript>
+  </div>
+
+  <div class="calendario-azioni">
+    <a class="btn" id="apriCalendario" href="https://calendar.google.com/calendar/embed?height=720&amp;wkst=2&amp;ctz=Europe%2FRome&amp;showPrint=0&amp;showTz=0&amp;showCalendars=0&amp;showTabs=0&amp;showTitle=0&amp;mode=MONTH&amp;src=Y19mMDZkYmRiMmFlNjc1ODQxZGI1NTdkZDFhYTBmZTUyMmVmNDcyNzY5YzY5OGUzNzliZmM3MDczYTk4MjgxYjEyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%23d50000" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Apri a schermo intero</a>
+  </div>
+</main>
+
+<script>
+(function () {
+  // Vista mensile su schermi larghi, vista "Agenda" (elenco eventi) su telefono
+  var BASE = 'https://calendar.google.com/calendar/embed?height=720&wkst=2&ctz=Europe%2FRome&showPrint=0&showTz=0&showCalendars=0&showTabs=0&showTitle=0&mode={MODE}&src=Y19mMDZkYmRiMmFlNjc1ODQxZGI1NTdkZDFhYTBmZTUyMmVmNDcyNzY5YzY5OGUzNzliZmM3MDczYTk4MjgxYjEyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23d50000';
+  var mq = window.matchMedia('(max-width: 768px)');
+  var frame = document.getElementById('calendario');
+  var link = document.getElementById('apriCalendario');
+  var modoCorrente = '';
+
+  function aggiorna() {
+    var modo = mq.matches ? 'AGENDA' : 'MONTH';
+    if (modo === modoCorrente) return;   // non ricarica il calendario se la vista non cambia
+    modoCorrente = modo;
+    var url = BASE.replace('{MODE}', modo);
+    frame.src = url;
+    link.href = url;
+  }
+
+  aggiorna();
+  if (mq.addEventListener) mq.addEventListener('change', aggiorna);
+  else if (mq.addListener) mq.addListener(aggiorna);   // browser meno recenti
+})();
+</script>
+
+</body>
+</html>
