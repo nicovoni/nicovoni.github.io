@@ -223,9 +223,27 @@
   // ---------------------------------------------------------------------------
   // Regole di prenotazione lato pagina (solo usabilità: il controllo vero è sul server)
   // ---------------------------------------------------------------------------
-  var APERTURA_MIN = 7 * 60 + 30;    // 07:30
-  var CHIUSURA_MIN = 17 * 60 + 30;   // 17:30 (compreso)
   var ANTICIPO_MIN_GIORNI = 1;
+
+  // Fascia oraria: nessun orario è scritto in questo file. Arriva dal foglio "impostazioni" tramite
+  // gli attributi data-fascia-dalle / data-fascia-fino di <body>, scritti da generaPaginaOrario().
+  // Se mancano o non sono validi la fascia è null e le prenotazioni restano bloccate
+  // (il server rifiuta comunque quelle fuori orario).
+  function oraInMinuti(testo) {
+    var m = /^(\d{1,2}):(\d{2})$/.exec(String(testo || '').trim());
+    if (!m || +m[1] > 23 || +m[2] > 59) return null;
+    return +m[1] * 60 + +m[2];
+  }
+
+  function leggiFascia() {
+    var dalle = document.body.getAttribute('data-fascia-dalle');
+    var fino  = document.body.getAttribute('data-fascia-fino');
+    var a = oraInMinuti(dalle), b = oraInMinuti(fino);
+    if (a === null || b === null || a >= b) return null;
+    return { dalle: dalle, fino: fino, dalMin: a, alMin: b };
+  }
+
+  var FASCIA = leggiFascia();
 
   function pad2(n) { return String(n).padStart(2, '0'); }
 
@@ -234,23 +252,25 @@
     return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000;
   }
 
+  // Ora di Roma (non quella del browser): stesso fuso usato dal server
   function fasciaAperta() {
-    var d = new Date();
-    var m = d.getHours() * 60 + d.getMinutes();
-    return m >= APERTURA_MIN && m <= CHIUSURA_MIN;
+    if (!FASCIA) return false;
+    var a = adessoRoma(); // "YYYY-MM-DDTHH:MM"
+    var m = +a.slice(11, 13) * 60 + +a.slice(14, 16);
+    return m >= FASCIA.dalMin && m <= FASCIA.alMin;
   }
 
   // Restituisce '' se prenotabile, altrimenti il motivo del blocco
   function verificaPrenotabile(slotData) {
     var p = slotData.split('/');
-    var d = new Date();
-    var oggi = d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+    var oggi = adessoRoma().slice(0, 10); // data di oggi a Roma
     var anticipo = giorniDaIso(p[2] + '-' + p[1] + '-' + p[0]) - giorniDaIso(oggi);
     if (anticipo < ANTICIPO_MIN_GIORNI) {
       return 'Non è possibile prenotare per oggi o per giorni passati: serve almeno un giorno di anticipo.';
     }
     if (!fasciaAperta()) {
-      return 'Le prenotazioni sono aperte dalle 07:30 alle 17:30.';
+      if (!FASCIA) return 'Orario di prenotazione non disponibile: ricarica la pagina.';
+      return 'Le prenotazioni sono aperte dalle ' + FASCIA.dalle + ' alle ' + FASCIA.fino + '.';
     }
     return '';
   }

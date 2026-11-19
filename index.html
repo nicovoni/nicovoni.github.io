@@ -167,7 +167,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
     </div>
     <div class="avviso">
       <i class="fas fa-clock" aria-hidden="true"></i>
-      <div>Si può prenotare ogni giorno <strong>dalle 07:30 alle 17:30</strong>, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</div>
+      <div>Si può prenotare ogni giorno <strong>dalle <span data-fascia-dalle>--:--</span> alle <span data-fascia-fino>--:--</span></strong>, con almeno un giorno di anticipo: non è possibile prenotare per il giorno stesso.</div>
     </div>
   </section>
 
@@ -205,7 +205,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   </section>
 
   <noscript>
-    <div class="avviso attenzione" style="margin-bottom:2rem">Per verificare l’orario di prenotazione serve JavaScript. <a href="https://forms.gle/JuLfANsMMFMz1rCt7">Apri il modulo</a> solo tra le 07:30 e le 17:30.</div>
+    <div class="avviso attenzione" style="margin-bottom:2rem">Per verificare l’orario di prenotazione serve JavaScript. <a href="https://forms.gle/JuLfANsMMFMz1rCt7">Apri il modulo</a> solo negli orari di prenotazione indicati sul sito.</div>
   </noscript>
 </main>
 
@@ -213,9 +213,10 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
 
 <script>
 (function () {
-  var OPEN_MIN = 7 * 60 + 30;   // 07:30
-  var CLOSE_MIN = 17 * 60 + 30; // 17:30 (da quest'ora in poi è chiuso)
   var TZ = 'Europe/Rome';
+  var CONFIG_URL = 'prenotazioni-config.json'; // pubblicato da Apps Script: unica fonte degli orari
+  var RICARICA_MS = 5 * 60 * 1000;
+  var RIPROVA_MS = 30 * 1000;
 
   var fmt = new Intl.DateTimeFormat('en-GB', {
     timeZone: TZ, hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
@@ -229,6 +230,8 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   var hint = document.getElementById('bookingHint');
   var href = btn.getAttribute('data-href');
   var lastState = null;
+  var fascia = null;          // { dalle, fino, apertura, chiusura } in minuti; null finché non è letta
+  var primoTentativo = false; // true dopo il primo tentativo di lettura della configurazione
 
   function romeSeconds() {
     var parts = fmt.formatToParts(new Date());
@@ -247,6 +250,38 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
     return pad(h) + ':' + pad(m) + ':' + pad(s);
   }
 
+  function oraInMinuti(t) {
+    var m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim());
+    if (!m || +m[1] > 23 || +m[2] > 59) return null;
+    return +m[1] * 60 + +m[2];
+  }
+
+  function leggiDati(d) {
+    if (!d) return null;
+    var a = oraInMinuti(d.dalle), b = oraInMinuti(d.fino);
+    if (a === null || b === null || a >= b) return null;
+    return { dalle: pad(Math.floor(a / 60)) + ':' + pad(a % 60), fino: pad(Math.floor(b / 60)) + ':' + pad(b % 60), apertura: a, chiusura: b };
+  }
+
+  function mostraOrariNelTesto() {
+    document.querySelectorAll('[data-fascia-dalle]').forEach(function (el) { el.textContent = fascia ? fascia.dalle : '--:--'; });
+    document.querySelectorAll('[data-fascia-fino]').forEach(function (el) { el.textContent = fascia ? fascia.fino : '--:--'; });
+  }
+
+  function setNonDisponibile() {
+    if (lastState === 'unavailable') return;
+    lastState = 'unavailable';
+    body.setAttribute('data-state', 'unavailable');
+    statusText.textContent = 'Orario di prenotazione non disponibile';
+    statusNote.textContent = '';
+    countdown.textContent = '--:--:--';
+    btn.textContent = 'Non disponibile';
+    btn.removeAttribute('href');
+    btn.setAttribute('role', 'link');
+    btn.setAttribute('aria-disabled', 'true');
+    hint.textContent = 'Non è stato possibile leggere gli orari di prenotazione. Ricarica la pagina tra qualche istante.';
+  }
+
   function setState(open) {
     var state = open ? 'open' : 'closed';
     if (state === lastState) return;
@@ -258,30 +293,63 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
       btn.setAttribute('href', href);
       btn.setAttribute('aria-disabled', 'false');
       btn.removeAttribute('role');
-      hint.textContent = 'Il modulo è disponibile fino alle 17:30.';
+      hint.textContent = 'Il modulo è disponibile fino alle ' + fascia.fino + '.';
     } else {
       statusText.textContent = 'Prenotazioni chiuse';
-      btn.textContent = 'Riapre alle 07:30';
+      btn.textContent = 'Riapre alle ' + fascia.dalle;
       btn.removeAttribute('href');
       btn.setAttribute('role', 'link');
       btn.setAttribute('aria-disabled', 'true');
-      hint.textContent = 'Il modulo si può usare solo dalle 07:30 alle 17:30, tutti i giorni.';
+      hint.textContent = 'Il modulo si può usare solo dalle ' + fascia.dalle + ' alle ' + fascia.fino + ', tutti i giorni.';
     }
   }
 
   function tick() {
+    if (!fascia) {
+      if (primoTentativo) setNonDisponibile();
+      return;
+    }
     var now = romeSeconds();
-    var open = now >= OPEN_MIN * 60 && now < CLOSE_MIN * 60;
+    var apre = fascia.apertura * 60;
+    var chiude = fascia.chiusura * 60;
+    // Come il server: l'intero minuto di chiusura è ancora valido
+    var open = now >= apre && now < chiude + 60;
     setState(open);
     var remaining;
     if (open) {
-      remaining = CLOSE_MIN * 60 - now;
-      statusNote.textContent = 'alla chiusura delle prenotazioni (17:30)';
+      remaining = Math.max(0, chiude - now);
+      statusNote.textContent = 'alla chiusura delle prenotazioni (' + fascia.fino + ')';
     } else {
-      remaining = now < OPEN_MIN * 60 ? OPEN_MIN * 60 - now : 86400 - now + OPEN_MIN * 60;
-      statusNote.textContent = 'alla riapertura delle prenotazioni (07:30)';
+      remaining = now < apre ? apre - now : 86400 - now + apre;
+      statusNote.textContent = 'alla riapertura delle prenotazioni (' + fascia.dalle + ')';
     }
     countdown.textContent = hms(remaining);
+  }
+
+  // Legge gli orari dal JSON. Se una rilettura fallisce si tiene l'ultima fascia valida;
+  // se non c'è mai stata una fascia valida il modulo resta bloccato e si riprova ogni 30 s.
+  function caricaFascia() {
+    fetch(CONFIG_URL + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        var f = leggiDati(d);
+        if (!f) throw new Error('configurazione non valida');
+        fascia = f;
+        primoTentativo = true;
+        lastState = null;
+        mostraOrariNelTesto();
+        tick();
+        setTimeout(caricaFascia, RICARICA_MS);
+      })
+      .catch(function (err) {
+        console.error('Orari di prenotazione non letti:', err);
+        primoTentativo = true;
+        tick();
+        setTimeout(caricaFascia, fascia ? RICARICA_MS : RIPROVA_MS);
+      });
   }
 
   btn.addEventListener('click', function (e) {
@@ -293,7 +361,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   document.getElementById('schoolYear').textContent = 'a.s. ' + start + '/' + (start + 1);
   document.getElementById('copyYear').textContent = y;
 
-  tick();
+  caricaFascia();
   setInterval(tick, 1000);
 })();
 </script>
