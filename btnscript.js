@@ -279,7 +279,8 @@
   // SETTIMANE: stato in base all'orologio di Roma
   //   corrente : dalle 08:00 del lunedì alla fine della 6ª ora del venerdì (13:40)
   //   passata  : dalla fine della 6ª ora del venerdì alle 08:00 del lunedì successivo, poi sparisce
-  //   prossima : la settimana subito dopo la corrente (o dopo la passata nel weekend)
+  //   prossima : la settimana subito dopo la corrente; con la passata ancora visibile (da venerdì 13:40
+  //              a lunedì 08:00) la stessa settimana è etichettata "Settimana in arrivo"
   // Si mostrano la passata (se c'è) e 3 settimane prenotabili.
   // ---------------------------------------------------------------------------
   var INIZIO_SETTIMANA = '08:00';
@@ -326,6 +327,7 @@
     var validoFino = document.body.getAttribute('data-valido-fino') || '';
     var prenotabiliViste = 0;
     var prossimaAssegnata = false;
+    var passataVista = false; // dal venerdì (13:40) al lunedì (08:00) la prima settimana dopo la passata è "in arrivo"
     var daMostrareDiDefault = null;
 
     document.querySelectorAll('.settimana-wrapper').forEach(function (w) {
@@ -338,9 +340,12 @@
         if (prenotabiliViste >= SETTIMANE_PRENOTABILI) mostra = false;
         else prenotabiliViste++;
       }
+      if (mostra && stato === 'passata') passataVista = true;
+      var inArrivo = false;
       if (mostra && stato === 'futura' && !prossimaAssegnata) {
         stato = 'prossima';
         prossimaAssegnata = true;
+        inArrivo = passataVista;
       }
 
       // Se manca la data di validità, le settimane non passate risultano non definitive (caso sicuro)
@@ -362,7 +367,7 @@
       }
 
       // Badge: si ricostruiscono solo se lo stato è cambiato
-      var chiave = stato + '|' + prov + '|' + mostra;
+      var chiave = stato + '|' + prov + '|' + mostra + '|' + inArrivo;
       if (w.getAttribute('data-chiave') !== chiave) {
         w.setAttribute('data-chiave', chiave);
         var label = w.querySelector('.settimana-label');
@@ -370,7 +375,7 @@
           label.textContent = '';
           label.classList.toggle('corrente', stato === 'corrente');
           if (stato === 'corrente') label.appendChild(creaBadge('badge-corrente', 'Settimana corrente'));
-          if (stato === 'prossima') label.appendChild(creaBadge('badge-prossima', 'Prossima settimana'));
+          if (stato === 'prossima') label.appendChild(creaBadge('badge-prossima', inArrivo ? 'Settimana in arrivo' : 'Prossima settimana'));
           if (stato === 'passata')  label.appendChild(creaBadge('badge-passata', 'Settimana passata'));
           if (prov) label.appendChild(creaBadge('badge-provvisoria', 'Orario non definitivo'));
         }
