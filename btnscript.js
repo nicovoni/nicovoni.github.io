@@ -322,6 +322,27 @@
     return b;
   }
 
+  // Solo mobile, solo all'apertura: la pagina parte dalla card del giorno corrente (le card dei giorni
+  // precedenti restano più in alto, raggiungibili scorrendo). Si usa la data di Roma, come il resto del file.
+  var scrollIniziale = false;
+  var scrollImpostato = null;
+  function scorriAlGiornoCorrente() {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    var attiva = document.querySelector('.settimana-wrapper.tab-attiva');
+    if (!attiva) return;
+    var p = adessoRoma().slice(0, 10).split('-');
+    var cella = attiva.querySelector('td[slotdata="' + p[2] + '/' + p[1] + '/' + p[0] + '"]');
+    var riga = cella && cella.closest('tr');
+    if (!riga) return;                                   // oggi non è nella settimana mostrata (weekend, settimana futura)
+    var prima = attiva.querySelector('tbody tr');
+    if (prima === riga) return;                          // lunedì: si resta in cima (titolo e legenda visibili)
+    var header = document.querySelector('.site-header');
+    var tabs = document.getElementById('tabs');
+    var sopra = (header ? header.offsetHeight : 0) + (tabs ? tabs.offsetHeight : 0) + 8; // barre fisse + un po' d'aria
+    scrollImpostato = Math.max(0, Math.round(riga.getBoundingClientRect().top + window.pageYOffset - sopra));
+    window.scrollTo(0, scrollImpostato);
+  }
+
   function aggiornaSettimane() {
     var adesso = adessoRoma();
     var validoFino = document.body.getAttribute('data-valido-fino') || '';
@@ -393,6 +414,16 @@
       mostraTab(daMostrareDiDefault);
     }
     document.body.classList.add('pronta');
+
+    if (!scrollIniziale) {
+      scrollIniziale = true;
+      scorriAlGiornoCorrente();
+      // A caricamento completo font e immagini possono spostare di poco il layout: si riallinea
+      // solo se l'utente non ha ancora scrollato (né il browser ha ripristinato un'altra posizione).
+      window.addEventListener('load', function () {
+        if (scrollImpostato !== null && Math.abs(window.pageYOffset - scrollImpostato) <= 2) scorriAlGiornoCorrente();
+      });
+    }
   }
 
   // Pulsanti attivi/disattivi, avviso fascia
@@ -428,6 +459,12 @@ function mostraTab(numero) {
   var tabAttiva = document.getElementById('tab-' + numero);
   if (target)    target.classList.add('tab-attiva');
   if (tabAttiva) tabAttiva.classList.add('attiva');
+  // Su schermi stretti la barra scorre in orizzontale: la scheda attiva viene portata al centro
+  if (tabAttiva && tabAttiva.parentNode) {
+    var barra = tabAttiva.parentNode;
+    var rt = tabAttiva.getBoundingClientRect(), rb = barra.getBoundingClientRect();
+    barra.scrollLeft += (rt.left - rb.left) - (barra.clientWidth - rt.width) / 2;
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -688,3 +688,16 @@ h1 {
 .leg-prenotato { background: var(--success-light); border-color: var(--success); }
 .leg-fisso { background: var(--bg); }
 .leg-dada { background: var(--accent-light); border-color: var(--accent); }
+
+/* ---------- MOBILE: la barra delle settimane resta visibile durante lo scroll ---------- */
+/* Solo schermi stretti: su desktop .tabs-container è nascosto. */
+@media (max-width: 768px) {
+  .tabs-container {
+    position: sticky;
+    top: 60px;                         /* subito sotto .site-header (height: 60px, sticky) */
+    z-index: 90;                       /* sotto l'header (100) e sotto il toast (1000) */
+    background: var(--bg);             /* opaco: le card non si vedono passare sotto i pulsanti */
+    padding-top: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+}
