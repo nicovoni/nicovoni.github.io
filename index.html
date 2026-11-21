@@ -63,6 +63,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   border: 1px solid var(--border);
   color: var(--text-muted);
 }
+.avviso[hidden] { display: none; }
 .avviso i { flex: none; margin-top: 3px; color: var(--primary); }
 .avviso.attenzione {
   background: rgba(217, 119, 6, 0.12);
@@ -161,9 +162,13 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   </div>
 
   <section class="avvisi" aria-label="Avvisi">
-    <div class="avviso attenzione">
-      <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
-      <div><strong>Orario delle lezioni provvisorio.</strong> L’orario viene aggiornato ogni settimana e il nuovo può uscire il venerdì, il sabato o anche la domenica. Quando esce, <strong>verifica le tue prenotazioni</strong> fatte sul vecchio orario.</div>
+    <div class="avviso attenzione" id="avvisoRettifica" role="alert" hidden>
+      <i class="fas fa-bullhorn" aria-hidden="true"></i>
+      <div><strong>Rettifica dell’orario.</strong> <span id="avvisoRettificaTesto"></span></div>
+    </div>
+    <div class="avviso attenzione" id="avvisoOrario" hidden>
+      <i class="fas fa-triangle-exclamation" id="avvisoOrarioIcona" aria-hidden="true"></i>
+      <div id="avvisoOrarioTesto"></div>
     </div>
     <div class="avviso">
       <i class="fas fa-clock" aria-hidden="true"></i>
@@ -231,6 +236,8 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   var href = btn.getAttribute('data-href');
   var lastState = null;
   var fascia = null;          // { dalle, fino, apertura, chiusura } in minuti; null finché non è letta
+  var datiAvvisi = null;      // { definitivo, comunicazione, avvisoTesto, avvisoFino }; null = valori predefiniti
+  var ultimaDataAvvisi = '';
   var primoTentativo = false; // true dopo il primo tentativo di lettura della configurazione
 
   function romeSeconds() {
@@ -261,6 +268,68 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
     var a = oraInMinuti(d.dalle), b = oraInMinuti(d.fino);
     if (a === null || b === null || a >= b) return null;
     return { dalle: pad(Math.floor(a / 60)) + ':' + pad(a % 60), fino: pad(Math.floor(b / 60)) + ':' + pad(b % 60), apertura: a, chiusura: b };
+  }
+
+  // Stato dell'orario e avviso di rettifica (campi facoltativi: se mancano valgono i predefiniti,
+  // cioè orario provvisorio e nessun avviso, come prima).
+  function leggiAvvisi(d) {
+    var o = (d && d.orario) || {};
+    var a = (d && d.avviso) || {};
+    return {
+      definitivo: o.definitivo === true,
+      comunicazione: typeof o.comunicazione === 'string' ? o.comunicazione : '',
+      avvisoTesto: typeof a.testo === 'string' ? a.testo.trim() : '',
+      avvisoFino: typeof a.fino === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(a.fino) ? a.fino : ''
+    };
+  }
+
+  var fmtData = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+  function oggiRomaIso() {
+    var y = '', m = '', g = '';
+    fmtData.formatToParts(new Date()).forEach(function (p) {
+      if (p.type === 'year') y = p.value;
+      if (p.type === 'month') m = p.value;
+      if (p.type === 'day') g = p.value;
+    });
+    return y + '-' + m + '-' + g;
+  }
+
+  function aggiornaAvvisi() {
+    var dati = datiAvvisi || leggiAvvisi(null);
+    var oggi = oggiRomaIso();
+    ultimaDataAvvisi = oggi;
+
+    // Avviso di rettifica: visibile se c'è un testo e la data (compresa) non è passata
+    var boxR = document.getElementById('avvisoRettifica');
+    var visibileR = !!dati.avvisoTesto && (!dati.avvisoFino || oggi <= dati.avvisoFino);
+    document.getElementById('avvisoRettificaTesto').textContent = visibileR ? dati.avvisoTesto : '';
+    boxR.hidden = !visibileR;
+
+    // Stato dell'orario: provvisorio (avviso di attenzione) oppure definitivo (nota neutra)
+    var boxO = document.getElementById('avvisoOrario');
+    var testo = document.getElementById('avvisoOrarioTesto');
+    var icona = document.getElementById('avvisoOrarioIcona');
+    while (testo.firstChild) testo.removeChild(testo.firstChild);
+    var forte = document.createElement('strong');
+    if (dati.definitivo) {
+      boxO.className = 'avviso';
+      icona.className = 'fas fa-circle-check';
+      forte.textContent = 'Orario delle lezioni definitivo.';
+      testo.appendChild(forte);
+      testo.appendChild(document.createTextNode(' Se verrà rettificato lo segnaleremo qui.' +
+        (dati.comunicazione ? ' Riferimento: ' + dati.comunicazione + '.' : '')));
+    } else {
+      boxO.className = 'avviso attenzione';
+      icona.className = 'fas fa-triangle-exclamation';
+      forte.textContent = 'Orario delle lezioni provvisorio.';
+      var forte2 = document.createElement('strong');
+      forte2.textContent = 'verifica le tue prenotazioni';
+      testo.appendChild(forte);
+      testo.appendChild(document.createTextNode(' L’orario viene aggiornato ogni settimana e il nuovo può uscire il venerdì, il sabato o anche la domenica. Quando esce, '));
+      testo.appendChild(forte2);
+      testo.appendChild(document.createTextNode(' fatte sul vecchio orario.'));
+    }
+    boxO.hidden = false;
   }
 
   function mostraOrariNelTesto() {
@@ -305,6 +374,7 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
   }
 
   function tick() {
+    if (primoTentativo && ultimaDataAvvisi !== oggiRomaIso()) aggiornaAvvisi();
     if (!fascia) {
       if (primoTentativo) setNonDisponibile();
       return;
@@ -338,15 +408,18 @@ body[data-state="open"] .dot { animation: pulse 2.2s ease-in-out infinite; }
         var f = leggiDati(d);
         if (!f) throw new Error('configurazione non valida');
         fascia = f;
+        datiAvvisi = leggiAvvisi(d);
         primoTentativo = true;
         lastState = null;
         mostraOrariNelTesto();
+        aggiornaAvvisi();
         tick();
         setTimeout(caricaFascia, RICARICA_MS);
       })
       .catch(function (err) {
         console.error('Orari di prenotazione non letti:', err);
         primoTentativo = true;
+        aggiornaAvvisi(); // senza dati nuovi: ultimi valori noti o, al primo caricamento, orario provvisorio
         tick();
         setTimeout(caricaFascia, fascia ? RICARICA_MS : RIPROVA_MS);
       });
