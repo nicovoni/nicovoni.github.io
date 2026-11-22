@@ -408,7 +408,7 @@
     // Su mobile: se nessuna scheda è attiva (primo caricamento) o la scheda attiva è sparita, si sceglie quella giusta
     var attiva = document.querySelector('.settimana-wrapper.tab-attiva');
     if ((!attiva || attiva.classList.contains('nascosta')) && daMostrareDiDefault !== null) {
-      mostraTab(daMostrareDiDefault, true); // scelta automatica all'apertura: nessuno scroll
+      mostraTab(daMostrareDiDefault);
     }
     document.body.classList.add('pronta');
 
@@ -456,18 +456,7 @@ function altezzaBarreFisse() {
   return (header ? header.offsetHeight : 0) + (tabs ? tabs.offsetHeight : 0) + 8;
 }
 
-// Solo mobile: porta la prima card (lunedì) della settimana scelta subito sotto le barre fisse.
-// Se la pagina è già in cima (titolo e legenda visibili) non sposta nulla.
-function scorriAInizioSettimana(settimana) {
-  if (!settimana || !window.matchMedia('(max-width: 768px)').matches) return;
-  if (window.pageYOffset <= 2) return;
-  var prima = settimana.querySelector('tbody tr');
-  if (!prima) return;
-  window.scrollTo(0, Math.max(0, Math.round(prima.getBoundingClientRect().top + window.pageYOffset - altezzaBarreFisse())));
-}
-
-// automatico = true quando la settimana è scelta dal codice all'apertura; false (o assente) quando la sceglie l'utente
-function mostraTab(numero, automatico) {
+function mostraTab(numero) {
   document.querySelectorAll('.settimana-wrapper').forEach(function (w) { w.classList.remove('tab-attiva'); });
   document.querySelectorAll('.tab-btn').forEach(function (t) { t.classList.remove('attiva'); });
   var target    = document.getElementById('settimana-' + numero);
@@ -480,8 +469,6 @@ function mostraTab(numero, automatico) {
     var rt = tabAttiva.getBoundingClientRect(), rb = barra.getBoundingClientRect();
     barra.scrollLeft += (rt.left - rb.left) - (barra.clientWidth - rt.width) / 2;
   }
-  // Tocco dell'utente (anche sulla settimana già attiva): si riparte dall'inizio di quella settimana
-  if (!automatico) scorriAInizioSettimana(target);
 }
 
 // ---------------------------------------------------------------------------
